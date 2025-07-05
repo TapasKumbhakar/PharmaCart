@@ -1,0 +1,27 @@
+.cart-container {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.cart-content {
+  background: #fff;
+  padding: 40px 32px;
+  border-radius: 16px;
+  box-shadow: 0 6px 32px rgba(0,0,0,0.10);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.cart-content h2 {
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+.cart-content p {
+  color: #666;
+  font-size: 1.05rem;
+}

@@ -1,0 +1,29 @@
+.about-container {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+}
+
+.about-content {
+  background: rgba(255,255,255,0.92);
+  padding: 40px 32px;
+  border-radius: 14px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  max-width: 600px;
+  text-align: center;
+}
+
+.about-content h2 {
+  color: #4f46e5;
+  font-size: 2rem;
+  margin-bottom: 18px;
+}
+
+.about-content p {
+  color: #444;
+  font-size: 1.1rem;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
