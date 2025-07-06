@@ -5,6 +5,8 @@ import storeTakeawayImg from "../assets/four card/storetakeway.png";
 import doctorImg from "../assets/four card/doctor.png";
 import medicineImg from "../assets/four card/medicine.png";
 import uploadfileImg from "../assets/four card/upload file.png";
+import c1 from "../assets/Carousel/5035bd8d259-PEMED25HP.webp";
+
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -48,28 +50,28 @@ export default function Home() {
         </h3>
       </div>
 
-      <div style={{ width: "100%" }}>
+      <div className="carousel-section">
         <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
           <div>
             <img
-              src="https://via.placeholder.com/1200x400?text=Welcome+to+PharmaCart"
+              src= "myapp/src/assets/Carousel/5035bd8d259-PEMED25HP.webp"
               alt="Banner 1"
             />
-            <p className="legend">Order Medicines Online</p>
+            {/* <p className="legend">Order Medicines Online</p> */}
           </div>
           <div>
             <img
-              src="https://via.placeholder.com/1200x400?text=Consult+Top+Doctors"
+              src={c1}
               alt="Banner 2"
             />
-            <p className="legend">Consult Certified Doctors</p>
+            {/* <p className="legend">Consult Certified Doctors</p> */}
           </div>
           <div>
             <img
               src="https://via.placeholder.com/1200x400?text=Get+Your+Health+Back"
               alt="Banner 3"
             />
-            <p className="legend">Health Comes First</p>
+            {/* <p className="legend">Health Comes First</p> */}
           </div>
         </Carousel>
       </div>
