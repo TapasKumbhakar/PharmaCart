@@ -1,6 +1,6 @@
 import React from 'react';
-import DoctorCard from './component/Doctor-card';
-import './component/Card-Container.css';
+import DoctorCard from '../component/Doctor-card';
+import '../component/Card-Container.css';
 
 const doctors = [
   {

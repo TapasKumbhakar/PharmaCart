@@ -3,15 +3,16 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import Login from './component/login';
 import Signup from './admin/signup';
 import Navbar from './component/Navbar';
-import Cart from './component/cart';
-import Home from './Home';
+import Cart from './pages/cart';
+import Home from './pages/Home';
 import CardContainer from './component/Card-Container';
-import Product from './public/Product';
-import Contact from './contact';
-import Doctors from './Doctors';
-import Store from './component/store';
-import DoctorConsultationForm from './component/DoctorConsultationForm';
-import Upload from './component/upload';
+import Product from './pages/Product';
+import Contact from './pages/contact';
+import Doctors from './pages/Doctors';
+import Store from './pages/store';
+import DoctorConsultationForm from './pages/DoctorConsultationForm';
+import Upload from './pages/upload';
+import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp';
 
 function App() {
   const products = [
@@ -61,7 +62,7 @@ function App() {
       id: 7,
       name: 'Dolo 650',
       desc: 'Commonly used for fever and mild pain.',
-      img: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80',
+      img:  dolo650Img ,
       price: 'MRP ₹35'
     },
     {
