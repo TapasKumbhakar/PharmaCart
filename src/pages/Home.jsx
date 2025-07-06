@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './Home.css';
+import '../pages/Home.css';
 import { useNavigate } from 'react-router-dom';
-import storeTakeawayImg from './assets/four card/storetakeway.png';
-import doctorImg from './assets/four card/doctor.png';
-import medicineImg from './assets/four card/medicine.png';
-import uploadfileImg from './assets/four card/upload file.png'; // Assuming this is the correct path for the upload file image
+import storeTakeawayImg from '../assets/four card/storetakeway.png';
+import doctorImg from '../assets/four card/doctor.png';
+import medicineImg from '../assets/four card/medicine.png';
+import uploadfileImg from '../assets/four card/upload file.png'; // Assuming this is the correct path for the upload file image
 
 
 const homeCards = [

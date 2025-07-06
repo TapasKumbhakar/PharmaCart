@@ -13,6 +13,7 @@ export default function Product(props) {
     <div className="product-container">
         <img className="product-image" src={get.img} alt={get.name} />
         <h1 className="product-title">{get.name}</h1>
+        <p>Description</p>
         <p className="product-desc">{get.desc}</p>
         <p className="product-price">Price: {get.price}</p>
         <button className="product-btn">Add to Cart</button>
