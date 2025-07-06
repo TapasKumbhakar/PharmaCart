@@ -1,6 +1,9 @@
 import React ,{useEffect , useState} from 'react';
 import {Navigate, Route, Routes} from "react-router-dom";
 import Login from './admin/login';
+import React, { useState } from 'react';
+import { Route, Routes } from "react-router-dom";
+import Login from './component/login';
 import Signup from './admin/signup';
 import Navbar from './component/Navbar';
 import Cart from './pages/cart';
@@ -102,6 +105,57 @@ function App() {
     },
   ];
 
+
+
+  // Cart state with quantity and localStorage persistence
+  const [cartItems, setCartItems] = useState(() => {
+    const saved = localStorage.getItem('pharmacart_cart');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Add to cart handler (increase quantity if exists)
+  const addToCart = (product) => {
+    setCartItems((prev) => {
+      const found = prev.find((item) => item.id === product.id);
+      if (found) {
+        return prev.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  // Remove from cart handler (remove all)
+  const removeFromCart = (id) => {
+    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  // Increase quantity
+  const increaseQuantity = (id) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  // Decrease quantity (remove if 1)
+  const decreaseQuantity = (id) => {
+    setCartItems((prev) =>
+      prev
+        .map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  // Save cart to localStorage whenever it changes
+  React.useEffect(() => {
+    localStorage.setItem('pharmacart_cart', JSON.stringify(cartItems));
+  }, [cartItems]);
+
   // Search state and logic lifted from Home.jsx
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState(null);
@@ -127,6 +181,7 @@ function App() {
         setSearchResult={setSearchResult}
         handleSearch={handleSearch}
         products={products}
+        cartCount={cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)}
       />
       <Routes>
         <Route path = "/" element ={<Home products={products}/>}  />
@@ -135,6 +190,8 @@ function App() {
         <Route path = "/register" element ={<Signup />} />
         <Route path = "/cart" element ={<Cart />}  />
         <Route path = "/id/:id" element ={<Product product={products}/>}  />
+        <Route path = "/cart" element ={<Cart cartItems={cartItems} removeFromCart={removeFromCart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
+        <Route path = "/id/:id" element ={<Product product={products} addToCart={addToCart} cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
         <Route path = "/contact" element ={<Contact />}  />
         <Route path = "/doctors" element ={<Doctors />}  />
         <Route path = "/store" element ={<Store />}  />

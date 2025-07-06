@@ -39,4 +39,45 @@
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+  min-width: 140px;
+  margin-right: 10px;
+  transition: background 0.2s;
+}
+
+.product-btn:disabled {
+  background: #a5b4fc;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.product-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-qty-btn {
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.product-qty-btn.plus {
+  background: #bbf7d0;
+  color: #059669;
+}
+.product-qty-value {
+  font-weight: 600;
+  font-size: 18px;
+  min-width: 32px;
+  text-align: center;
 }

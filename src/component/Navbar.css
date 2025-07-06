@@ -24,6 +24,7 @@ body, .navbar, .navbar-logo, .navbar-links, .navbar-login-btn {
   display: flex;
   height: 50px;
   width: 64px;
+  width: 70px;
   align-items: center;
   font-size: 1.7rem;
   font-weight: bold;
