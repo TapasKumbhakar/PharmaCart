@@ -1,0 +1,104 @@
+.doctor-consultation-form-bg {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  padding: 32px;
+  max-width: 600px;
+  margin: 40px auto;
+  /* background: linear-gradient(120deg, #77a496 60%, #e3ecfa 100%); */
+  min-height: 100vh;
+}
+
+.doctor-consultation-form-bg h1 {
+  text-align: center;
+  color: #2a659e;
+  margin-bottom: 28px;
+  letter-spacing: 1px;
+}
+
+.doctor-consultation-form {
+  background: #fff;
+  padding: 28px 24px 20px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(42, 101, 158, 0.08), 0 1.5px 4px rgba(0,0,0,0.04);
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 7px;
+  font-weight: 600;
+  color: #2a659e;
+  letter-spacing: 0.2px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="date"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #c7d6e7;
+  border-radius: 6px;
+  background: #f8fbff;
+  font-size: 15px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #2a659e;
+  outline: none;
+  box-shadow: 0 0 0 2px #e3ecfa;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 90px;
+  max-height: 220px;
+}
+
+.form-group input[type="file"] {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 14px;
+}
+
+.doctor-consultation-form button {
+  background: linear-gradient(90deg, #2a659e 60%, #3b8ad9 100%);
+  color: #fff;
+  padding: 12px 0;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(42, 101, 158, 0.08);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.doctor-consultation-form button:hover, .doctor-consultation-form button:focus {
+  background: linear-gradient(90deg, #225482 60%, #2a659e 100%);
+  box-shadow: 0 4px 16px rgba(42, 101, 158, 0.13);
+}
+
+@media (max-width: 600px) {
+  .doctor-consultation-form-bg, .doctor-consultation-form {
+    padding: 10px;
+    max-width: 100%;
+  }
+  .doctor-consultation-form {
+    padding: 16px 8px 12px 8px;
+  }
+}

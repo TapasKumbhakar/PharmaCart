@@ -1,0 +1,227 @@
+.banner-section {
+  width: 100%;
+  background: linear-gradient(90deg, #4f46e5 60%, #60a5fa 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 78px 13px 100px 18px;
+  margin-bottom: 18px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
+}
+.banner-section h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+.banner-section p {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #ffff;
+}
+.card-container h2 {
+  margin-bottom: 24px;
+  color: #000002;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+.card-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 32px 28px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 32px;
+  box-sizing: border-box;
+}
+
+.card-list::-webkit-scrollbar {
+  height: 10px;
+}
+.card-list::-webkit-scrollbar-thumb {
+  background: #b2b2da;
+  border-radius: 8px;
+}
+.card-list::-webkit-scrollbar-track {
+  background: #ebf0ec;
+  border-radius: 8px;
+}
+
+
+.card {
+  border-radius: 14px;
+  min-height: 270px;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+  margin: 0;
+  padding: 18px 10px 14px 10px;
+  background: #fff;
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 6px 18px rgba(99, 102, 241, 0.15);
+  transform: translateY(-3px) scale(1.04);
+}
+
+
+.img-box {
+  width: 100%;
+  height: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+
+.img-box img {
+  max-width: 100%;
+  max-height: 80px;
+  border-radius: 10px;
+  object-fit: contain;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+
+
+.card h3 {
+  color: #09090e;
+  margin-bottom: 4px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+
+.card p {
+  color: #222;
+  font-size: 0.97rem;
+  margin-bottom: 5px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* .add-to-cart-btn {
+  margin-top: auto;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-to-cart-btn:hover {
+  background: #3730a3;
+} */
+
+.card-container-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background: rgba(255,255,255,0.18);
+  box-shadow: none;
+  border-radius: 10px;
+}
+
+.doctor-card-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 0 48px 0;
+  padding: 0 20px 32px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #f0fdf4;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(5, 150, 105, 0.07);
+}
+
+.doctor-banner-section {
+  width: 100%;
+  background: linear-gradient(90deg, #059669 60%, #34d399 100%);
+  color: #fff;
+  border-radius: 14px;
+  padding: 38px 13px 48px 18px;
+  margin-bottom: 18px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(5, 150, 105, 0.1);
+}
+
+.doctor-banner-section h1 {
+  font-size: 2.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.doctor-banner-section p {
+  font-size: 1.08rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.doctor-section-title {
+  margin-bottom: 24px;
+  color: #059669;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+@media (max-width: 1200px) {
+  .card-list {
+    max-width: 98vw;
+    gap: 24px 16px;
+  }
+  .card {
+    width: 180px;
+    min-height: 230px;
+  }
+}
+@media (max-width: 900px) {
+  .card-list {
+    gap: 16px 8px;
+  }
+  .card {
+    width: 150px;
+    min-height: 200px;
+  }
+}
+@media (max-width: 600px) {
+  .card-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .card {
+    width: 95vw;
+    min-height: 160px;
+    padding: 10px 4px;
+  }
+}
