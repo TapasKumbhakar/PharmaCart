@@ -15,7 +15,18 @@ import Doctors from './pages/Doctors';
 import Store from './pages/store';
 import DoctorConsultationForm from './pages/DoctorConsultationForm';
 import Upload from './pages/upload';
-import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp';
+import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp'; 
+import paracetamolImg from './assets/medicines/paracetamol-500-mg-tablet.png';
+import ibuprofenImg from './assets/medicines/ibuprofen-400mg-tablets-1740783905Ibuprofen-400mg-Tablets.png';
+import amoxicillinImg from './assets/medicines/amoxicillin-capsules-500mg.png';
+import cetirizineImg from './assets/medicines/Cetirizine-HCl-10-mg-Tablet.png';
+import metforminImg from './assets/medicines/metformin-500mg.png';
+import azithromycinImg from './assets/medicines/azithromycin - Copy.png';
+import Pantoprazole from './assets/medicines/pantoprazole.png';
+import Ciprofloxacin from './assets/medicines/ciprofloxacin.png';
+import Montelukast from './assets/medicines/Montelkast.png';
+import Aspirin from './assets/medicines/images.jpeg';
+import Loratadine from './assets/medicines/lornasin-10-tab-500x500.webp';
 
 function App() {
   const products = [
@@ -23,42 +34,42 @@ function App() {
       id: 1,
       name: 'Paracetamol',
       desc: 'Pain reliever and a fever reducer.',
-      img: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80',
+      img: paracetamolImg,
       price: 'MRP ₹30'
     },
     {
       id: 2,
       name: 'Ibuprofen',
       desc: 'Nonsteroidal anti-inflammatory drug (NSAID).',
-      img: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&fit=crop&w=400&q=80',
+      img: ibuprofenImg,
       price: 'MRP ₹45'
     },
     {
       id: 3,
       name: 'Amoxicillin',
       desc: 'Antibiotic used to treat bacterial infections.',
-      img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
+      img: amoxicillinImg,
       price: 'MRP ₹120'
     },
     {
       id: 4,
       name: 'Cetirizine',
       desc: 'Antihistamine used for allergy relief.',
-      img: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=400&q=80',
+      img: cetirizineImg,
       price: 'MRP ₹25'
     },
     {
       id: 5,
       name: 'Metformin',
       desc: 'Used to treat type 2 diabetes.',
-      img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
+      img: metforminImg,
       price: 'MRP ₹60'
     },
     {
       id: 6,
       name: 'Azithromycin',
       desc: 'Antibiotic for various bacterial infections.',
-      img: 'https://images.unsplash.com/photo-1510626176961-4b57d4fbad04?auto=format&fit=crop&w=400&q=80',
+      img: azithromycinImg,
       price: 'MRP ₹150'
     },
     {
@@ -72,35 +83,35 @@ function App() {
       id: 8,
       name: 'Aspirin',
       desc: 'Used to reduce pain, fever, or inflammation.',
-      img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80',
+      img: Aspirin,
       price: 'MRP ₹40'
     },
     {
       id: 9,
       name: 'Ciprofloxacin',
       desc: 'Antibiotic for bacterial infections.',
-      img: 'https://images.unsplash.com/photo-1516815231357-1c1b6e1b8a49?auto=format&fit=crop&w=400&q=80',
+      img: Ciprofloxacin,
       price: 'MRP ₹110'
     },
     {
       id: 10,
       name: 'Loratadine',
       desc: 'Antihistamine for allergy relief.',
-      img: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80',
+      img: Loratadine,
       price: 'MRP ₹28'
     },
     {
       id: 11,
       name: 'Pantoprazole',
       desc: 'Reduces stomach acid, used for GERD.',
-      img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80',
+      img: Pantoprazole,
       price: 'MRP ₹55'
     },
     {
       id: 12,
       name: 'Montelukast',
       desc: 'Used for allergies and asthma.',
-      img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
+      img: Montelukast,
       price: 'MRP ₹90'
     },
   ];

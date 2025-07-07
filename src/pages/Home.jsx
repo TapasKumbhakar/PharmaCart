@@ -1,39 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import '../pages/Home.css';
-import { useNavigate } from 'react-router-dom';
-import storeTakeawayImg from '../assets/four card/storetakeway.png';
-import doctorImg from '../assets/four card/doctor.png';
-import medicineImg from '../assets/four card/medicine.png';
-import uploadfileImg from '../assets/four card/upload file.png'; 
-import c1 from "../assets/Carousel/5035bd8d259-PEMED25HP.webp";
+
+// import React, { useEffect, useState } from "react";
+import "../pages/Home.css";
+import { useNavigate } from "react-router-dom";
+import storeTakeawayImg from "../assets/four card/storetakeway.png";
+import doctorImg from "../assets/four card/doctor.png";
+import medicineImg from "../assets/four card/medicine.png";
+import uploadfileImg from "../assets/four card/upload file.png";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-
 const homeCards = [
   {
-    title: 'Medicine',
-    desc: 'Browse and order medicines online.',
-    img:  medicineImg,
-    route: '/Card-Container',
+    title: "Medicine",
+    desc: "Browse and order medicines online.",
+    img: medicineImg,
+    route: "/Card-Container",
   },
   {
-    title: 'Doctor Consultant',
-    desc: 'Book appointments with top doctors.',
+    title: "Doctor Consultant",
+    desc: "Book appointments with top doctors.",
     img: doctorImg,
-    route: '/doctors',
+    route: "/doctors",
   },
   {
-    title: 'Order with Prescription',
-    desc: 'Upload your prescription and order easily.',
+    title: "Order with Prescription",
+    desc: "Upload your prescription and order easily.",
     img: uploadfileImg,
-    route: '/upload', // updated route
+    route: "/upload", // updated route
   },
   {
-    title: 'Store Takeaway',
-    desc: 'Pick up your order from a nearby store.',
+    title: "Store Takeaway",
+    desc: "Pick up your order from a nearby store.",
     img: storeTakeawayImg,
-    route: '/store', // updated route
+    route: "/store", // updated route
   },
 ];
 
@@ -46,20 +45,23 @@ export default function Home() {
         <h1>Welcome to PharmaCart</h1>
         <h3>Your trusted online pharmacy for genuine medicines and health essentials.</h3>
       </div>
-       <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
+       
+
+      <div style={{ width: "100%" }}>
+        <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
           <div>
             <img
-              src= "myapp/src/assets/Carousel/5035bd8d259-PEMED25HP.webp"
+              src="https://via.placeholder.com/1200x400?text=Welcome+to+PharmaCart"
               alt="Banner 1"
             />
-            {/* <p className="legend">Order Medicines Online</p> */}
+            <p className="legend">Order Medicines Online</p>
           </div>
           <div>
             <img
-              src={c1}
+              src="https://via.placeholder.com/1200x400?text=Consult+Top+Doctors"
               alt="Banner 2"
             />
-            {/* <p className="legend">Consult Certified Doctors</p> */}
+            <p className="legend">Consult Certified Doctors</p>
           </div>
           <div>
             <img
@@ -69,6 +71,8 @@ export default function Home() {
             {/* <p className="legend">Health Comes First</p> */}
           </div>
         </Carousel>
+      </div>
+
       <div className="home-container">
         <div className="home-cards-section">
           {homeCards.map(card => (
@@ -86,6 +90,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+
       <div>
         <h2 className="home-section-title">Why Choose Us?</h2>
         <div className="home-features">
@@ -110,3 +115,4 @@ export default function Home() {
     </>
   );
 }
+

@@ -1,8 +1,8 @@
 import React from 'react';
 import './Card-Container.css';
 import { useNavigate } from 'react-router-dom';
-// import paracetamolImg from '../assets/medicines/paracetamol.jpeg';
-// import ibuprofenImg from '../assets/medicines/Ibuprofen.jpeg';
+// import paracetamolImg from '../assets/medicines/paracetamol-500-mg-tablet.png';
+// import ibuprofenImg from '../assets/medicines/ibuprofen-400mg-tablets-1740783905Ibuprofen-400mg-Tablets.png';
 // import amoxicillinImg from '../assets/medicines/amoxicillin.png';
 // import cetirizineImg from '../assets/medicines/cetirizine.png';
 // import metforminImg from '../assets/medicines/metformin.png';
