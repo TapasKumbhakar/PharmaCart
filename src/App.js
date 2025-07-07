@@ -1,5 +1,5 @@
 import React ,{ useState} from 'react';
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import Login from './admin/login';
 import  {Navigate} from "react-router-dom";
 // import { Route, Routes } from "react-router-dom";
@@ -15,6 +15,9 @@ import Doctors from './pages/Doctors';
 import Store from './pages/store';
 import DoctorConsultationForm from './pages/DoctorConsultationForm';
 import Upload from './pages/upload';
+import MyOrders from './pages/myOrder';
+import MyProfile from './pages/myProfile';
+import { AuthProvider } from './context/AuthContext';
 import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp'; 
 import paracetamolImg from './assets/medicines/paracetamol-500-mg-tablet.png';
 import ibuprofenImg from './assets/medicines/ibuprofen-400mg-tablets-1740783905Ibuprofen-400mg-Tablets.png';
@@ -185,6 +188,18 @@ function App() {
 
   return (
     <>
+     <AuthProvider>
+      
+        <Navbar />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/orders" element={<MyOrders />} />
+          <Route path="/profile" element={<MyProfile />} />
+          {/* add others as needed */}
+        </Routes>
+     
+   
       <Navbar
         search={search}
         setSearch={setSearch}
@@ -209,6 +224,7 @@ function App() {
         <Route path = "/doctor-consultation" element ={<DoctorConsultationForm />}  />
         <Route path = "/upload" element ={<Upload />}  />
       </Routes>
+       </AuthProvider>
     </>
   );
 }

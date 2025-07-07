@@ -3,15 +3,24 @@ import './Navbar.css';
 import pharmalogo from '../assets/logo/pharmalogo.png';
 import cartIcon from '../assets/logo/cart.png';
 import { Link, useNavigate } from 'react-router-dom';
+import UserDropdown from './UserDropdown';
+import { useAuth } from '../context/AuthContext';
 
-export default function Navbar({ cartCount = 0 }) {
+export default function Navbar(props) {
+  const { cartCount = 0 } = props; // get cartCount from props
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   return (
     <nav className="navbar">
       {/* Logo navigates to home */}
       <Link to="/">
-        <img className="navbar-logo" src={pharmalogo} alt="PharmaCart Logo" style={{ cursor: 'pointer' }} />
+        <img
+          className="navbar-logo"
+          src={pharmalogo}
+          alt="PharmaCart Logo"
+          style={{ cursor: 'pointer' }}
+        />
       </Link>
 
       <div className="navbar-right">
@@ -57,9 +66,16 @@ export default function Navbar({ cartCount = 0 }) {
           <li><Link to="/contact">ContactUs</Link></li>
         </ul>
 
-        <button className="navbar-login-btn" onClick={() => navigate('/login')}>
-          Login
-        </button>
+        {/* Right side auth control */}
+        <div style={{ marginLeft: '20px' }}>
+          {isLoggedIn ? (
+            <UserDropdown />
+          ) : (
+            <button className="navbar-login-btn" onClick={() => navigate('/login')}>
+              Login
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
