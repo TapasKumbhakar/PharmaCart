@@ -3,26 +3,28 @@ import './about.css';
 
 export default function About() {
   return (
-    <div>
-        <h2 className="home-section-title">Why Choose Us?</h2>
-        <div className="home-features">
-          <div className="home-feature">
-            <h3>Genuine Products</h3>
-            <p>
-              We ensure all medicines are sourced from trusted manufacturers.
-            </p>
-          </div>
-          <div className="home-feature">
-            <h3>Convenient Delivery</h3>
-            <p>
-              Get your orders delivered to your doorstep quickly and safely.
-            </p>
-          </div>
-          <div className="home-feature">
-            <h3>Expert Consultation</h3>
-            <p>Book appointments with top doctors for online consultations.</p>
-          </div>
-        </div>
+    <div className="about-container">
+      <div className="about-content">
+        <h1>About PharmaCart</h1>
+        <p>
+          PharmaCart is your trusted online pharmacy platform, dedicated to making healthcare accessible and convenient for everyone. We offer a wide range of medicines, health products, and doctor consultations, all from the comfort of your home.
+        </p>
+        <h2>Our Mission</h2>
+        <p>
+          To provide safe, affordable, and timely healthcare solutions, ensuring that quality medicines and expert advice are just a click away.
+        </p>
+        <h2>Why Choose PharmaCart?</h2>
+        <ul style={{textAlign: 'left', margin: '0 auto', maxWidth: 400}}>
+          <li>Wide selection of genuine medicines</li>
+          <li>Easy and secure ordering process</li>
+          <li>Expert doctor consultations</li>
+          <li>Fast and reliable delivery</li>
+          <li>Dedicated customer support</li>
+        </ul>
+        <p>
+          Thank you for choosing PharmaCart as your healthcare partner!
+        </p>
       </div>
+    </div>
   );
 }

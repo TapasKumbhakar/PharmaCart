@@ -15,6 +15,7 @@ import Doctors from './pages/Doctors';
 import Store from './pages/store';
 import DoctorConsultationForm from './pages/DoctorConsultationForm';
 import Upload from './pages/upload';
+import About from './pages/about';
 import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp'; 
 import paracetamolImg from './assets/medicines/paracetamol-500-mg-tablet.png';
 import ibuprofenImg from './assets/medicines/ibuprofen-400mg-tablets-1740783905Ibuprofen-400mg-Tablets.png';
@@ -199,11 +200,10 @@ function App() {
         <Route path = "/Card-Container" element ={<CardContainer product={products}/>}  />
         <Route path = "/login" element ={<Login />}  />
         <Route path = "/register" element ={<Signup />} />
-        {/* <Route path = "/cart" element ={<Cart />}  /> */}
-        {/* <Route path = "/id/:id" element ={<Product product={products}/>}  /> */}
         <Route path = "/cart" element ={<Cart cartItems={cartItems} removeFromCart={removeFromCart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
         <Route path = "/id/:id" element ={<Product product={products} addToCart={addToCart} cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
         <Route path = "/contact" element ={<Contact />}  />
+        <Route path = "/about" element ={<About />}  />
         <Route path = "/doctors" element ={<Doctors />}  />
         <Route path = "/store" element ={<Store />}  />
         <Route path = "/doctor-consultation" element ={<DoctorConsultationForm />}  />
