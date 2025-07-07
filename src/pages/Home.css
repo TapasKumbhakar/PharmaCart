@@ -174,54 +174,7 @@
 }
 /* ...existing code... */
 
-.home-section-title {
-  font-size: 2rem;
-  font-weight: 700;
-  margin: 40px 0 24px 0;
-  text-align: center;
-  color: #059669;
-  letter-spacing: 1px;
-}
 
-.home-features {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 32px;
-  margin: 0 auto 40px auto;
-  max-width: 900px;
-}
-
-.home-feature {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.08);
-  padding: 28px 32px;
-  flex: 1 1 240px;
-  min-width: 240px;
-  max-width: 300px;
-  text-align: center;
-  transition: box-shadow 0.2s;
-}
-
-.home-feature:hover {
-  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.15);
-  border-color: #34d399;
-}
-
-.home-feature h3 {
-  color: #059669;
-  font-size: 1.25rem;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.home-feature p {
-  color: #374151;
-  font-size: 1rem;
-  margin: 0;
-}
 
 .carousel .slide img {
   height: 300px; /* or adjust as needed */

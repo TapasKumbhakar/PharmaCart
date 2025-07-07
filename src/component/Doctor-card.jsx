@@ -12,7 +12,7 @@ export default function DoctorCard({ name, desc, img, fee }) {
         <h3>{name}</h3>
         <p>{desc}</p>
         <p style={{fontWeight: 600, color: '#059669', margin: '8px 0'}}>Consultation Fee: {fee}</p>
-        <button className="add-to-cart-btn" style={{background: '#059669'}} onClick={() => navigate('/doctor-consultation')}>Book Now</button>
+        <button className="BookNow-btn" style={{background: '#059669' , cursor: 'pointer'}} onClick={() => navigate('/doctor-consultation')}>Book Now</button>
       </div>
     </div>
   );

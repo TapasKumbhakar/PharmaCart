@@ -1,7 +1,7 @@
 import React ,{ useState} from 'react';
 import {Route, Routes} from "react-router-dom";
 import Login from './admin/login';
-// import React, {Navigate} from 'react';
+import  {Navigate} from "react-router-dom";
 // import { Route, Routes } from "react-router-dom";
 // import Login from './component/login';
 import Signup from './admin/signup';

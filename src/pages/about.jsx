@@ -3,20 +3,26 @@ import './about.css';
 
 export default function About() {
   return (
-    <div className="about-container">
-      <div className="about-content">
-        
-        <h2>About PoetryHub</h2>
-        <p>
-          PoetryHub is a vibrant online community for poetry lovers. Our mission is to connect people through the beauty of words, allowing users to discover, share, and create poetry from all over the world.
-        </p>
-        <p>
-          Whether you are a seasoned poet or just starting out, PoetryHub provides a welcoming space to express yourself, read inspiring works, and engage with fellow enthusiasts.
-        </p>
-        <p>
-          Join us and be part of a growing family that celebrates creativity, emotion, and the art of poetry.
-        </p>
+    <div>
+        <h2 className="home-section-title">Why Choose Us?</h2>
+        <div className="home-features">
+          <div className="home-feature">
+            <h3>Genuine Products</h3>
+            <p>
+              We ensure all medicines are sourced from trusted manufacturers.
+            </p>
+          </div>
+          <div className="home-feature">
+            <h3>Convenient Delivery</h3>
+            <p>
+              Get your orders delivered to your doorstep quickly and safely.
+            </p>
+          </div>
+          <div className="home-feature">
+            <h3>Expert Consultation</h3>
+            <p>Book appointments with top doctors for online consultations.</p>
+          </div>
+        </div>
       </div>
-    </div>
   );
 }
