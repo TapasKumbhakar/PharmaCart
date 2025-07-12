@@ -30,6 +30,7 @@ import Ciprofloxacin from './assets/medicines/ciprofloxacin.png';
 import Montelukast from './assets/medicines/Montelkast.png';
 import Aspirin from './assets/medicines/images.jpeg';
 import Loratadine from './assets/medicines/lornasin-10-tab-500x500.webp';
+import Footer from './component/Footer';
 
 function App() {
   const products = [
@@ -189,42 +190,45 @@ function App() {
   return (
     <>
      <AuthProvider>
-      
-        <Navbar />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/orders" element={<MyOrders />} />
-          <Route path="/profile" element={<MyProfile />} />
-          {/* add others as needed */}
-        </Routes>
-     
-   
-      <Navbar
-        search={search}
-        setSearch={setSearch}
-        searchResult={searchResult}
-        setSearchResult={setSearchResult}
-        handleSearch={handleSearch}
-        products={products}
-        cartCount={cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)}
-      />
-      <Routes>
-        <Route path = "/" element ={<Home products={products}/>}  />
-        <Route path = "/Card-Container" element ={<CardContainer product={products}/>}  />
-        <Route path = "/login" element ={<Login />}  />
-        <Route path = "/register" element ={<Signup />} />
-        {/* <Route path = "/cart" element ={<Cart />}  /> */}
-        {/* <Route path = "/id/:id" element ={<Product product={products}/>}  /> */}
-        <Route path = "/cart" element ={<Cart cartItems={cartItems} removeFromCart={removeFromCart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
-        <Route path = "/id/:id" element ={<Product product={products} addToCart={addToCart} cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
-        <Route path = "/contact" element ={<Contact />}  />
-        <Route path = "/doctors" element ={<Doctors />}  />
-        <Route path = "/store" element ={<Store />}  />
-        <Route path = "/doctor-consultation" element ={<DoctorConsultationForm />}  />
-        <Route path = "/upload" element ={<Upload />}  />
-      </Routes>
-       </AuthProvider>
+  <Navbar
+    search={search}
+    setSearch={setSearch}
+    searchResult={searchResult}
+    setSearchResult={setSearchResult}
+    handleSearch={handleSearch}
+    products={products}
+    cartCount={cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0)}
+  />
+
+  <Routes>
+    <Route path="/" element={<Home products={products} />} />
+    <Route path="/Card-Container" element={<CardContainer product={products} />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
+    <Route path="/orders" element={<MyOrders />} />
+    <Route path="/profile" element={<MyProfile />} />
+    <Route path="/cart" element={<Cart
+      cartItems={cartItems}
+      removeFromCart={removeFromCart}
+      increaseQuantity={increaseQuantity}
+      decreaseQuantity={decreaseQuantity}
+    />} />
+    <Route path="/id/:id" element={<Product
+      product={products}
+      addToCart={addToCart}
+      cartItems={cartItems}
+      increaseQuantity={increaseQuantity}
+      decreaseQuantity={decreaseQuantity}
+    />} />
+    <Route path="/contact" element={<Contact />} />
+    <Route path="/doctors" element={<Doctors />} />
+    <Route path="/store" element={<Store />} />
+    <Route path="/doctor-consultation" element={<DoctorConsultationForm />} />
+    <Route path="/upload" element={<Upload />} />
+  </Routes>
+</AuthProvider>
+      <Footer />
+
     </>
   );
 }

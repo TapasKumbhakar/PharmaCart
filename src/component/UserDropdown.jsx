@@ -18,12 +18,12 @@ export default function UserDropdown() {
       {open && (
         <div className="dropdown-menu">
           <a href="/orders">My Orders</a>
-          <a href="/saved">Save For Later</a>
+          <a href="/myAppointment">My Appointment</a>
           <a href="/medical">Medical Records</a>
-          <a href="/profile">My Profile</a>
-          <a href="/wallet">Wallet</a>
-          <a href="/refer">Refer & Earn</a>
-          <a href="/notifications">Notifications</a>
+          {/* <a href="/profile">My Profile</a> */}
+          {/* <a href="/wallet">Wallet</a> */}
+          {/* <a href="/refer">Refer & Earn</a> */}
+          {/* <a href="/notifications">Notifications</a> */}
           <button onClick={logout}>Log Out</button>
         </div>
       )}

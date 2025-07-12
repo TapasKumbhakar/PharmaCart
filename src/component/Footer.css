@@ -1,30 +1,94 @@
 .footer {
-  background: #3730a3;
-  color: #fff;
-  padding: 18px 0;
-  text-align: center;
-  position: relative;
-  bottom: 0;
-  width: 100%;
-  margin-top: 40px;
+  background-color: #f5f4f4;
+  color: rgb(189, 182, 182);
+  padding-top: 3rem;
+  padding-bottom: 2rem;
 }
 
-.footer-content {
+.footer-container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footer-top {
   display: flex;
   flex-direction: column;
+  gap: 2.5rem;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.5);
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer-brand {
+  max-width: 500px;
+}
+
+.footer-logo {
+  display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
-.footer-links a {
-  color: #a5b4fc;
-  text-decoration: none;
-  margin: 0 6px;
+.footer-logo img {
+  width: 42px;
+  height: 32px;
+}
+
+.footer-brand-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #6366f1;
+}
+
+.footer-description {
+  margin-top: 1.5rem;
+  color: #000000;
+  line-height: 1.6;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 700px;
+}
+
+.footer-section {
+  min-width: 150px;
+}
+
+.footer-section-title {
   font-size: 1rem;
-  transition: color 0.2s;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: rgb(39, 27, 27);
 }
 
-.footer-links a:hover {
-  color: #fff;
+.footer-link {
+  color: #9ca3af;
+  text-decoration: none;
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  transition: text-decoration 0.3s;
+}
+
+.footer-link:hover {
   text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #6b7280;
+  padding-top: 1.5rem;
 }
