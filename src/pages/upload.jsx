@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './upload.module.css';
 
 const Upload = () => {
@@ -6,12 +6,8 @@ const Upload = () => {
   const [previewType, setPreviewType] = useState(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [fade, setFade] = useState(false);
   const fileInputRef = useRef();
 
-  useEffect(() => {
-    setFade(true);
-  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -48,22 +44,13 @@ const Upload = () => {
     fileInputRef.current.value = '';
   };
 
-  // Fade out on link click (simulate navigation)
-  const handleLinkClick = (e, href, target) => {
-    if (target === '_blank') return;
-    e.preventDefault();
-    setFade(false);
-    setTimeout(() => {
-      window.location.href = href;
-    }, 400);
-  };
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f4f6fb' }}>
       <div className={styles['upload-container']}>
         <h2 className={styles['upload-title']}>Upload Prescription</h2>
         <form className={styles['upload-form']} onSubmit={handleSubmit}>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name <span style={{color:'red'}}>*</span></label>
           <input
             id="name"
             type="text"
@@ -72,7 +59,7 @@ const Upload = () => {
             onChange={e => setName(e.target.value)}
             required
           />
-          <label htmlFor="phone">Phone</label>
+          <label htmlFor="phone">Phone <span style={{color:'red'}}>*</span></label>
           <input
             id="phone"
             type="tel"
@@ -81,7 +68,7 @@ const Upload = () => {
             onChange={e => setPhone(e.target.value)}
             required
           />
-          <label htmlFor="file">Upload Prescription (Image or PDF)</label>
+          <label htmlFor="file">Upload Prescription (Image or PDF) <span style={{color:'red'}}>*</span></label>
           <input
             id="file"
             type="file"
