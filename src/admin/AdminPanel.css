@@ -1,0 +1,26 @@
+.admin-panel {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+.admin-sections {
+  margin-top: 16px;
+}
+.admin-section {
+  margin-bottom: 24px;
+  box-shadow: 0 1px 6px rgba(99,102,241,0.07);
+  transition: box-shadow 0.2s;
+}
+.admin-section:hover {
+  box-shadow: 0 4px 16px rgba(99,102,241,0.13);
+}
+.admin-section h2 {
+  color: #6366f1;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.admin-section ul {
+  padding-left: 18px;
+  color: #374151;
+  font-size: 1rem;
+}

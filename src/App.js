@@ -1,7 +1,9 @@
 import React ,{ useState} from 'react';
+import PaymentSuccess from './pages/PaymentSuccess';
 import { Route, Routes} from "react-router-dom";
 import Login from './admin/login';
-import  {Navigate} from "react-router-dom";
+import AdminPanel from './admin/AdminPanel';
+
 // import { Route, Routes } from "react-router-dom";
 // import Login from './component/login';
 import Signup from './admin/signup';
@@ -30,6 +32,7 @@ import Ciprofloxacin from './assets/medicines/ciprofloxacin.png';
 import Montelukast from './assets/medicines/Montelkast.png';
 import Aspirin from './assets/medicines/images.jpeg';
 import Loratadine from './assets/medicines/lornasin-10-tab-500x500.webp';
+
 
 function App() {
   const products = [
@@ -192,7 +195,6 @@ function App() {
       
         <Navbar />
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/orders" element={<MyOrders />} />
           <Route path="/profile" element={<MyProfile />} />
@@ -216,13 +218,15 @@ function App() {
         <Route path = "/register" element ={<Signup />} />
         {/* <Route path = "/cart" element ={<Cart />}  /> */}
         {/* <Route path = "/id/:id" element ={<Product product={products}/>}  /> */}
-        <Route path = "/cart" element ={<Cart cartItems={cartItems} removeFromCart={removeFromCart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
+        <Route path = "/cart" element ={<Cart cartItems={cartItems} removeFromCart={removeFromCart} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} clearCart={() => setCartItems([])} />}  />
         <Route path = "/id/:id" element ={<Product product={products} addToCart={addToCart} cartItems={cartItems} increaseQuantity={increaseQuantity} decreaseQuantity={decreaseQuantity} />}  />
         <Route path = "/contact" element ={<Contact />}  />
         <Route path = "/doctors" element ={<Doctors />}  />
         <Route path = "/store" element ={<Store />}  />
         <Route path = "/doctor-consultation" element ={<DoctorConsultationForm />}  />
         <Route path = "/upload" element ={<Upload />}  />
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/admin-panel" element={<AdminPanel />} />
       </Routes>
        </AuthProvider>
     </>

@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './Product.css';
 
 export default function Product(props) {
   const { id } = useParams();
   const p = props.product;
   const [added, setAdded] = useState(false);
+  const navigate = useNavigate();
   const get = p.find((p) => p.id === parseInt(id, 10));
   const cartItem = Array.isArray(props.cartItems) ? props.cartItems.find((item) => item.id === get?.id) : null;
+  const handleBuyNow = () => {
+    if (props.addToCart && (!cartItem || cartItem.quantity === 0)) {
+      props.addToCart(get);
+    }
+    navigate('/cart');
+  };
 
   if (!get) {
     return (
@@ -34,14 +41,22 @@ export default function Product(props) {
       <p className="product-price">Price: {get.price}</p>
       <div className="product-qty-controls" style={{justifyContent:'center', marginBottom:16}}>
         {(!cartItem || cartItem.quantity === 0) ? (
-          <button className="product-btn" onClick={handleAddToCart}>
-            Add to Cart
-          </button>
+          <>
+            <button className="product-btn" onClick={handleAddToCart}>
+              Add to Cart
+            </button>
+            <button className="product-btn" style={{marginLeft: 10, background: '#10b981'}} onClick={handleBuyNow}>
+              Buy Now
+            </button>
+          </>
         ) : (
           <>
             <button className="product-qty-btn" onClick={() => props.decreaseQuantity && props.decreaseQuantity(get.id)}>-</button>
             <span className="product-qty-value">{cartItem.quantity}</span>
             <button className="product-qty-btn plus" onClick={() => props.increaseQuantity && props.increaseQuantity(get.id)}>+</button>
+            <button className="product-btn" style={{marginLeft: 10, background: '#10b981'}} onClick={handleBuyNow}>
+              Buy Now
+            </button>
           </>
         )}
       </div>
