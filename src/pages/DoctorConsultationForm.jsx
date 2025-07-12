@@ -5,12 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { stripePromise } from '../stripe';
 import './DoctorConsultationForm.css';
 
-const doctors = [
-  { id: 1, name: 'Dr. A. Sharma', specialty: 'Cardiologist' },
-  { id: 2, name: 'Dr. B. Gupta', specialty: 'Dermatologist' },
-  { id: 3, name: 'Dr. C. Singh', specialty: 'Pediatrician' },
-];
-
 export default function DoctorConsultationForm() {
   const [form, setForm] = useState({
     patientName: '',
@@ -38,12 +32,12 @@ export default function DoctorConsultationForm() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    // Doctor selection removed, no check needed
+
     if (!payment) {
       Swal.fire({ icon: 'warning', title: 'Select payment method', text: 'Please select a payment method.', timer: 1800, showConfirmButton: false });
       return;
     }
-    if (payment === 'Cash On Delivery') {
+    if (payment === 'Offline Payment / CASH') {
       Swal.fire({ title: 'Order Placed!', text: 'Your consultation has been booked successfully.', icon: 'success', timer: 2000, showConfirmButton: false });
       setTimeout(() => navigate('/'), 2000);
     } else if (payment === 'Online Payment') {
@@ -119,11 +113,11 @@ export default function DoctorConsultationForm() {
           <label>Payment Method: <span style={{color:'red'}}>*</span></label>
           <select value={payment} onChange={e => setPayment(e.target.value)} required>
             <option value="" disabled>Select Payment Method</option>
-            <option>Cash On Delivery</option>
+            <option>Offline Payment / CASH</option>
             <option>Online Payment</option>
           </select>
         </div>
-        {payment === 'Cash On Delivery' ? (
+        {payment === 'Offline Payment / CASH' ? (
           <button type="submit">Place Order</button>
         ) : (
           <button type="submit">Pay Now</button>

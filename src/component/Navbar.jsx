@@ -125,7 +125,7 @@ export default function Navbar(props) {
               className="navbar-login-btn"
               onClick={() => navigate('/login')}
               style={{
-                background: 'linear-gradient(90deg, rgb(99, 102, 241) 60%, rgb(15, 227, 171) 100%)',
+                background: 'rgb(99, 102, 241)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '8px',

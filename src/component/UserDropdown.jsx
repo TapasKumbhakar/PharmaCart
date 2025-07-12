@@ -1,11 +1,30 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './UserDropdown.css';
-
 export default function UserDropdown() {
   const { isLoggedIn, userType, logout } = useAuth();
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    setTimeout(() => {
+      import('sweetalert2').then(Swal => {
+        Swal.default.fire({
+          icon: 'success',
+          title: 'Logged out!',
+          text: 'You have been logged out successfully.',
+          timer: 1800,
+          showConfirmButton: false
+        }).then(() => {
+          navigate('/');
+        });
+        setTimeout(() => navigate('/'), 1800);
+      });
+    }, 100);
+  };
 
   if (!isLoggedIn) return null;
 
@@ -38,7 +57,7 @@ export default function UserDropdown() {
           <a href="/wallet">Wallet</a>
           <a href="/refer">Refer & Earn</a>
           <a href="/notifications">Notifications</a>
-          <button onClick={logout}>Log Out</button>
+          <button onClick={handleLogout}>Log Out</button>
         </div>
       )}
     </div>

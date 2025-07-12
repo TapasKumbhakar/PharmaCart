@@ -4,7 +4,7 @@ import './signup.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function Signup() {
-  const [userType, setUserType] = useState(''); // none selected by default
+  const [userType, setUserType] = useState('Customer'); // Customer selected by default
   const [form, setForm] = useState({
     fullname: '',
     mobile: '',
