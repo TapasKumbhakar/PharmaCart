@@ -19,6 +19,8 @@ import DoctorConsultationForm from './pages/DoctorConsultationForm';
 import Upload from './pages/upload';
 import MyOrders from './pages/myOrder';
 import MyProfile from './pages/myProfile';
+import MyAppointments from './pages/myAppointment';
+import MedicalRecords from './pages/MedicalRecords';
 import { AuthProvider } from './context/AuthContext';
 import dolo650Img from './assets/medicines/dolo-paracetamol-650mg.webp'; 
 import paracetamolImg from './assets/medicines/paracetamol-500-mg-tablet.png';
@@ -228,6 +230,8 @@ function App() {
         <Route path = "/upload" element ={<Upload />}  />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/my-appointments" element={<MyAppointments />} />
+        <Route path="/medical-records" element={<MedicalRecords />} />
       </Routes>
        </AuthProvider>
        <Footer/>

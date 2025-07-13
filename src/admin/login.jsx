@@ -3,11 +3,13 @@ import Swal from 'sweetalert2';
 import './login.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { authAPI } from '../services/api';
 
 export default function Login() {
   const [userType, setUserType] = useState('Customer'); // Customer selected by default
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -15,23 +17,48 @@ export default function Login() {
     setUserType(type);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login({ type: userType, identifier, password });
-    Swal.fire({
-      icon: 'success',
-      title: `${userType} login successful!`,
-      text: 'Welcome to PharmaCart.',
-      timer: 1800,
-      showConfirmButton: false
-    });
-    setTimeout(() => {
-      if (userType === 'Admin') {
-        navigate('/admin-panel');
-      } else {
-        navigate('/');
+    setLoading(true);
+
+    try {
+      const response = await authAPI.login({
+        email: identifier,
+        password,
+        type: userType
+      });
+
+      if (response.success) {
+        login(response.user);
+
+        Swal.fire({
+          icon: 'success',
+          title: `${userType} login successful!`,
+          text: 'Welcome to PharmaCart.',
+          timer: 1800,
+          showConfirmButton: false
+        });
+
+        setTimeout(() => {
+          if (userType === 'Admin') {
+            navigate('/admin-panel');
+          } else {
+            navigate('/');
+          }
+        }, 1800);
       }
-    }, 1800);
+    } catch (error) {
+      console.error('Login error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: error.message || 'Invalid credentials. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

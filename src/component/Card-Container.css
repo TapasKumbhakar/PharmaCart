@@ -1,10 +1,10 @@
 .banner-section {
   width: 100%;
-  background: linear-gradient(90deg, #4f46e5 60%, #60a5fa 100%);
+  /* background: linear-gradient(90deg, #4f46e5 60%, #60a5fa 100%); */
   color: #fff;
-  border-radius: 14px;
-  padding: 78px 13px 100px 18px;
-  margin-bottom: 18px;
+  /* border-radius: 14px; */
+  /* padding: 78px 13px 100px 18px; */
+  /* margin-bottom: 18px; */
   text-align: center;
   box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
 }

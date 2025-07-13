@@ -1,17 +1,28 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { authAPI, isAuthenticated, getCurrentUserId } from '../services/api';
 
 const AuthContext = createContext();
 
 
 export const AuthProvider = ({ children }) => {
-  // Login state
+  // Login state - now based on token presence
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    const stored = localStorage.getItem('isLoggedIn');
-    return stored === 'true';
+    return isAuthenticated();
+  });
+
+  // User data state
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('userData');
+    return storedUser ? JSON.parse(storedUser) : null;
   });
 
   // User type state ("Admin" or "Customer")
   const [userType, setUserType] = useState(() => {
+    const storedUser = localStorage.getItem('userData');
+    if (storedUser) {
+      const userData = JSON.parse(storedUser);
+      return userData.type || '';
+    }
     return localStorage.getItem('userType') || '';
   });
 
@@ -21,34 +32,64 @@ export const AuthProvider = ({ children }) => {
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
-  // Sync isLoggedIn to localStorage
+  // Sync user data to localStorage
   useEffect(() => {
-    localStorage.setItem('isLoggedIn', isLoggedIn);
-  }, [isLoggedIn]);
-
-  // Sync userType to localStorage
-  useEffect(() => {
-    if (userType) {
-      localStorage.setItem('userType', userType);
+    if (user) {
+      localStorage.setItem('userData', JSON.stringify(user));
+      localStorage.setItem('userType', user.type);
     } else {
+      localStorage.removeItem('userData');
       localStorage.removeItem('userType');
     }
-  }, [userType]);
+  }, [user]);
+
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (isAuthenticated() && !user) {
+        try {
+          const response = await authAPI.getProfile();
+          if (response.success) {
+            setUser(response.user);
+            setUserType(response.user.type);
+            setIsLoggedIn(true);
+          }
+        } catch (error) {
+          console.error('Failed to get user profile:', error);
+          console.log('Token validation failed, logging out...');
+          logout();
+        }
+      } else if (!isAuthenticated() && isLoggedIn) {
+        // If no token but marked as logged in, log out
+        console.log('No valid token found, logging out...');
+        logout();
+      }
+    };
+
+    checkAuth();
+  }, []);
 
   // Sync cart to localStorage
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  // Accepts an object: { type: 'Admin' | 'Customer', ... }
-  const login = (user = {}) => {
+  // Login function - now handles API response
+  const login = (userData) => {
+    setUser(userData);
+    setUserType(userData.type);
     setIsLoggedIn(true);
-    if (user.type) setUserType(user.type);
   };
+
+  // Logout function - clears all auth data
   const logout = () => {
-    setIsLoggedIn(false);
+    authAPI.logout(); // This removes the token
+    setUser(null);
     setUserType('');
+    setIsLoggedIn(false);
+    localStorage.removeItem('userData');
     localStorage.removeItem('userType');
+    localStorage.removeItem('isLoggedIn'); // Keep for backward compatibility
   };
 
   // 🔥 This is the new function you need
@@ -61,6 +102,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        user,
         userType,
         login,
         logout,

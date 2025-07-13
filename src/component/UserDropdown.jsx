@@ -51,7 +51,7 @@ export default function UserDropdown() {
       {open && (
         <div className="dropdown-menu">
           <a href="/orders">My Orders</a>
-          <a href="/myAppointment">My Appointment</a>
+          <a href="/my-appointments">My Appointment</a>
           <a href="/medical">Medical Records</a>
           {/* <a href="/profile">My Profile</a> */}
           {/* <a href="/wallet">Wallet</a> */}

@@ -141,20 +141,28 @@
 
 .banner-section {
     width: 100%;
-    background: #aff1c9 !important;
-    color: #16743a !important;
-    border-radius: 14px;
-    padding: 30px 15px 50px 18px !important;
-    margin-bottom: 18px;
-    text-align: center;
-    box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08);
+    background: white;
+    /* background: #aff1c9;
+    color: #16743a  */
+    /* border-radius: 14px; */
+    /* padding: 30px 15px 50px 18px !important; */
+    /* margin-bottom: 18px; */
+    /* text-align: center; */
+    /* box-shadow: 0 2px 12px rgba(79, 70, 229, 0.08); */
 }
 .banner-section h3{
     font-size: 1.1rem;
     margin: 0;
     color: #0c0303 !important;
 }
-
+.banner-img {
+    width: calc(100% - 32px);
+    height: auto;
+    border-radius: 12px;
+    margin: 16px;
+    background: white;
+  
+}
 @media (max-width: 1300px) {
   .home-cards-section {
     grid-template-columns: repeat(3, 1fr);

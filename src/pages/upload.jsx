@@ -1,4 +1,8 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { medicalRecordAPI } from '../services/api';
+import Swal from 'sweetalert2';
 import styles from './upload.module.css';
 
 const Upload = () => {
@@ -6,7 +10,12 @@ const Upload = () => {
   const [previewType, setPreviewType] = useState(null);
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [recordType, setRecordType] = useState('Prescription');
+  const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
   const fileInputRef = useRef();
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
 
   const handleFileChange = (e) => {
@@ -29,19 +38,87 @@ const Upload = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const file = fileInputRef.current.files[0];
-    if (!file) {
-      alert('Please upload a file.');
+
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please log in',
+        text: 'You must be logged in to upload medical records.',
+        timer: 1800,
+        showConfirmButton: false
+      });
+      setTimeout(() => navigate('/login'), 1800);
       return;
     }
-    alert(`Prescription uploaded successfully for ${name}`);
-    setName('');
-    setPhone('');
-    setPreviewUrl(null);
-    setPreviewType(null);
-    fileInputRef.current.value = '';
+
+    const file = fileInputRef.current.files[0];
+    if (!file) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No file selected',
+        text: 'Please select a file to upload.',
+        timer: 1500,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Store the record information in localStorage for now
+      const recordData = {
+        id: Date.now().toString(),
+        patientName: name,
+        phone: phone,
+        recordType: recordType,
+        description: description,
+        fileName: file.name,
+        fileSize: file.size,
+        fileType: file.type,
+        uploadDate: new Date().toISOString(),
+        recordNumber: `MR${Date.now()}`
+      };
+
+      // Get existing records from localStorage
+      const existingRecords = JSON.parse(localStorage.getItem('medicalRecords') || '[]');
+      existingRecords.push(recordData);
+      localStorage.setItem('medicalRecords', JSON.stringify(existingRecords));
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Upload Successful!',
+        text: `Medical record uploaded successfully for ${name}`,
+        timer: 2000,
+        showConfirmButton: false
+      });
+
+      // Reset form
+      setName('');
+      setPhone('');
+      setRecordType('Prescription');
+      setDescription('');
+      setPreviewUrl(null);
+      setPreviewType(null);
+      fileInputRef.current.value = '';
+
+      // Navigate to medical records page after 2 seconds
+      setTimeout(() => navigate('/medical-records'), 2000);
+
+    } catch (error) {
+      console.error('Upload error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: 'Failed to upload medical record. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -68,7 +145,33 @@ const Upload = () => {
             onChange={e => setPhone(e.target.value)}
             required
           />
-          <label htmlFor="file">Upload Prescription (Image or PDF) <span style={{color:'red'}}>*</span></label>
+
+          <label htmlFor="recordType">Record Type</label>
+          <select
+            id="recordType"
+            value={recordType}
+            onChange={e => setRecordType(e.target.value)}
+            style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ddd' }}
+          >
+            <option value="Prescription">Prescription</option>
+            <option value="Lab Report">Lab Report</option>
+            <option value="X-Ray">X-Ray</option>
+            <option value="MRI">MRI</option>
+            <option value="CT Scan">CT Scan</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label htmlFor="description">Description (Optional)</label>
+          <textarea
+            id="description"
+            placeholder="Add any additional notes about this record"
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            rows={3}
+            style={{ padding: '10px', borderRadius: '5px', border: '1px solid #ddd', resize: 'vertical' }}
+          />
+
+          <label htmlFor="file">Upload Medical Record (Image or PDF) <span style={{color:'red'}}>*</span></label>
           <input
             id="file"
             type="file"
@@ -86,7 +189,9 @@ const Upload = () => {
               <span>{previewUrl}</span>
             )}
           </div>
-          <button type="submit">Upload</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Uploading...' : 'Upload Medical Record'}
+          </button>
         </form>
       </div>
     </div>

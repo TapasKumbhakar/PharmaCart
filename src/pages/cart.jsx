@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { stripePromise } from '../stripe';
+import { orderAPI, getCurrentUserId } from '../services/api';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import './cart.css';
@@ -29,7 +30,7 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
   const shippingFee = price > 0 && price < 499 ? 40 : 0;
   const total = price + shippingFee;
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!isLoggedIn) {
       Swal.fire({
         icon: 'warning',
@@ -43,34 +44,69 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
       }, 1800);
       return;
     }
-    if (payment === 'Cash On Delivery') {
-      Swal.fire({
-        title: 'Order Placed!',
-        text: 'Your order has been placed successfully.',
-        icon: 'success',
-        timer: 1800,
-        showConfirmButton: false
-      });
-      setTimeout(() => {
-        clearCart && clearCart();
-        navigate('/');
-      }, 2000);
-    }
 
-    else if (payment === 'Online Payment') {
+    try {
+      // Prepare order data
+      const orderData = {
+        items: cartItems.map(item => ({
+          productId: item.id || item.name,
+          name: item.name,
+          price: typeof item.price === 'string' ?
+            (item.price.match(/(\d+)/) ? Number(item.price.match(/(\d+)/)[1]) : 0) :
+            item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        totalAmount: total,
+        shippingFee: shippingFee,
+        paymentMethod: payment,
+        shippingAddress: {
+          street: address,
+          city: 'Default City',
+          state: 'Default State',
+          zipCode: '000000',
+          country: 'India'
+        }
+      };
+
+      if (payment === 'Cash On Delivery') {
+        // Save order to database
+        const response = await orderAPI.createOrder(orderData);
+
+        if (response.success) {
+          Swal.fire({
+            title: 'Order Placed!',
+            text: `Your order #${response.order.orderNumber} has been placed successfully.`,
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+
+          setTimeout(() => {
+            clearCart && clearCart();
+            navigate('/orders');
+          }, 2000);
+        }
+      } else if (payment === 'Online Payment') {
+        Swal.fire({
+          title: 'Redirecting to payment gateway...',
+          text: 'Please wait while we process your payment.',
+          icon: 'info',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        // Note: Online payment will be handled by the existing Stripe integration
+      }
+    } catch (error) {
+      console.error('Order placement error:', error);
       Swal.fire({
-        title: 'Redirecting to payment gateway...',
-        text: 'Please wait while we process your payment.',
-        icon: 'info',
+        icon: 'error',
+        title: 'Order Failed',
+        text: error.message || 'Failed to place order. Please try again.',
         timer: 2000,
         showConfirmButton: false
       });
-    } else {
-      setTimeout(() => {
-        clearCart && clearCart();
-        navigate('/');
-      }, 2000);
-    }  
+    }
   };
 
   return (

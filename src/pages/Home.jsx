@@ -1,4 +1,3 @@
-
 // import React, { useEffect, useState } from "react";
 import "../pages/Home.css";
 import { useNavigate } from "react-router-dom";
@@ -8,6 +7,7 @@ import medicineImg from "../assets/four card/medicine.png";
 import uploadfileImg from "../assets/four card/upload file.png";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import banner from "../assets/banner/Banner.jpg";
 
 const homeCards = [
   {
@@ -42,57 +42,33 @@ export default function Home() {
   return (
     <>
       <div className="banner-section">
-        <h1>Welcome to PharmaCart</h1>
-        <h3>Your trusted online pharmacy for genuine medicines and health essentials.</h3>
-      </div>
-       
+        <img src={banner} alt="Banner" className="banner-img" />
+        {/* <h1 className="banner-title">Welcome to PharmaCart</h1>
+        <p className="banner-subtitle">Your one-stop solution for health needs</p> */}
 
-      <div style={{ width: "100%" }}>
-        <Carousel autoPlay infiniteLoop showThumbs={false} showStatus={false}>
-          <div>
-            <img
-              src="https://via.placeholder.com/1200x400?text=Welcome+to+PharmaCart"
-              alt="Banner 1"
-            />
-            <p className="legend">Order Medicines Online</p>
+        <div className="home-container">
+          <div className="home-cards-section">
+            {homeCards.map((card) => (
+              <div
+                className="home-card"
+                key={card.title}
+                onClick={() => card.route && navigate(card.route)}
+                style={{ cursor: card.route ? "pointer" : "default" }}
+              >
+                <img
+                  src={card.img}
+                  alt={card.title}
+                  className="home-card-img"
+                />
+                <h3>{card.title}</h3>
+                <p>{card.desc}</p>
+              </div>
+            ))}
           </div>
-          <div>
-            <img
-              src="https://via.placeholder.com/1200x400?text=Consult+Top+Doctors"
-              alt="Banner 2"
-            />
-            <p className="legend">Consult Certified Doctors</p>
-          </div>
-          <div>
-            <img
-              src="https://via.placeholder.com/1200x400?text=Get+Your+Health+Back"
-              alt="Banner 3"
-            />
-            {/* <p className="legend">Health Comes First</p> */}
-          </div>
-        </Carousel>
-      </div>
-
-      <div className="home-container">
-        <div className="home-cards-section">
-          {homeCards.map(card => (
-            <div
-              className="home-card"
-              key={card.title}
-              onClick={() => card.route && navigate(card.route)}
-              style={{cursor: card.route ? 'pointer' : 'default'}}
-            >
-              <img src={card.img} alt={card.title} className="home-card-img" />
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-          
-            </div>
-          ))}
         </div>
       </div>
 
-      
+     
     </>
   );
 }
-

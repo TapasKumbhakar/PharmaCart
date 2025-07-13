@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import './signup.css';
 import { useNavigate } from 'react-router-dom';
+import { authAPI } from '../services/api';
 
 export default function Signup() {
   const [userType, setUserType] = useState('Customer'); // Customer selected by default
@@ -12,6 +13,7 @@ export default function Signup() {
     password: '',
     confirmPassword: ''
   });
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleUserTypeChange = (type) => {
@@ -23,17 +25,65 @@ export default function Signup() {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // You can use userType in your signup logic
-    Swal.fire({
-      icon: 'success',
-      title: `${userType} signup successful!`,
-      text: 'Please log in.',
-      timer: 1800,
-      showConfirmButton: false
-    });
-    setTimeout(() => navigate('/login'), 1800);
+
+    // Validate form
+    if (form.password !== form.confirmPassword) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Password Mismatch',
+        text: 'Passwords do not match. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    if (form.password.length < 6) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Weak Password',
+        text: 'Password must be at least 6 characters long.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await authAPI.register({
+        fullname: form.fullname,
+        mobile: form.mobile,
+        email: form.email,
+        password: form.password,
+        type: userType
+      });
+
+      if (response.success) {
+        Swal.fire({
+          icon: 'success',
+          title: `${userType} signup successful!`,
+          text: 'Please log in with your credentials.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+        setTimeout(() => navigate('/login'), 2000);
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Signup Failed',
+        text: error.message || 'Registration failed. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

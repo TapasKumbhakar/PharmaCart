@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import { stripePromise } from '../stripe';
+import { appointmentAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import './DoctorConsultationForm.css';
 
 export default function DoctorConsultationForm() {
@@ -19,7 +21,9 @@ export default function DoctorConsultationForm() {
   });
   // Doctor selection removed as per request
   const [payment, setPayment] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const consultationFee = 300;
 
   const handleChange = e => {
@@ -33,30 +37,92 @@ export default function DoctorConsultationForm() {
   const handleSubmit = async e => {
     e.preventDefault();
 
+    // Debug: Check authentication status
+    console.log('isLoggedIn:', isLoggedIn);
+    console.log('authToken:', localStorage.getItem('authToken'));
+    console.log('userData:', localStorage.getItem('userData'));
+
+    if (!isLoggedIn) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please log in',
+        text: 'You must be logged in to book an appointment.',
+        timer: 1800,
+        showConfirmButton: false
+      });
+      setTimeout(() => navigate('/login'), 1800);
+      return;
+    }
+
     if (!payment) {
       Swal.fire({ icon: 'warning', title: 'Select payment method', text: 'Please select a payment method.', timer: 1800, showConfirmButton: false });
       return;
     }
-    if (payment === 'Offline Payment / CASH') {
-      Swal.fire({ title: 'Order Placed!', text: 'Your consultation has been booked successfully.', icon: 'success', timer: 2000, showConfirmButton: false });
-      setTimeout(() => navigate('/'), 2000);
-    } else if (payment === 'Online Payment') {
-      Swal.fire({ title: 'Redirecting to payment gateway...', text: 'Please wait while we process your payment.', icon: 'info', timer: 1800, showConfirmButton: false });
-      setTimeout(async () => {
-        const stripe = await stripePromise;
-        const response = await fetch('http://localhost:4242/create-checkout-session', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            cartItems: [{ name: `Doctor Consultation`, price: consultationFee, quantity: 1 }],
-            shippingFee: 0
-          })
-        });
-        const session = await response.json();
-        if (session.id) {
-          await stripe.redirectToCheckout({ sessionId: session.id });
+
+    setLoading(true);
+
+    try {
+      // Prepare appointment data
+      const appointmentData = {
+        patientName: form.patientName,
+        email: form.email,
+        phone: form.phone,
+        dateOfBirth: form.dob,
+        gender: form.gender,
+        consultationType: form.consultationType,
+        preferredDate: form.preferredDate,
+        symptoms: form.symptoms,
+        consultationFee: consultationFee,
+        paymentMethod: payment,
+        attachedReports: form.attachReports?.name || null
+      };
+
+      if (payment === 'Offline Payment / CASH') {
+        // Save appointment to database
+        console.log('Sending appointment data:', appointmentData);
+        const response = await appointmentAPI.createAppointment(appointmentData);
+        console.log('Appointment response:', response);
+
+        if (response.success) {
+          Swal.fire({
+            title: 'Appointment Booked!',
+            text: `Your consultation #${response.appointment.appointmentNumber} has been booked successfully.`,
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          setTimeout(() => navigate('/my-appointments'), 2000);
         }
-      }, 1800);
+      } else if (payment === 'Online Payment') {
+        Swal.fire({ title: 'Redirecting to payment gateway...', text: 'Please wait while we process your payment.', icon: 'info', timer: 1800, showConfirmButton: false });
+        setTimeout(async () => {
+          const stripe = await stripePromise;
+          const response = await fetch('http://localhost:4242/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              cartItems: [{ name: `Doctor Consultation`, price: consultationFee, quantity: 1 }],
+              shippingFee: 0,
+              orderData: { type: 'appointment', appointmentData }
+            })
+          });
+          const session = await response.json();
+          if (session.id) {
+            await stripe.redirectToCheckout({ sessionId: session.id });
+          }
+        }, 1800);
+      }
+    } catch (error) {
+      console.error('Appointment booking error:', error.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Booking Failed',
+        text: error.message || 'Failed to book appointment. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,17 +150,18 @@ export default function DoctorConsultationForm() {
           <label htmlFor="gender">Gender: <span style={{color:'red'}}>*</span></label>
           <select id="gender" name="gender" value={form.gender} onChange={handleChange} required>
             <option value="">--Select--</option>
-            <option value="female">Female</option>
-            <option value="male">Male</option>
-            <option value="other">Other</option>
+            <option value="Female">Female</option>
+            <option value="Male">Male</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div className="form-group">
           <label htmlFor="consultationType">Consultation Type: <span style={{color:'red'}}>*</span></label>
           <select id="consultationType" name="consultationType" value={form.consultationType} onChange={handleChange} required>
             <option value="">--Select--</option>
-            <option value="inperson">In‑Person</option>
+            <option value="General Consultation">In‑Person</option>
             <option value="online">Online / Tele‑Consultation</option>
+            <option value="Emergency">Emergency</option>
           </select>
         </div>
         <div className="form-group">
