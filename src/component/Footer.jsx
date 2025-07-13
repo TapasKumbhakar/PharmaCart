@@ -65,7 +65,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <p className="footer-bottom">
-          Copyright 2025 © PrebuiltUI All Right Reserved.
+          Copyright 2025 © PharmaCart. All Right Reserved.
         </p>
       </div>
     </footer>

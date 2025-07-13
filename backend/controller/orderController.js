@@ -241,11 +241,61 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+// Admin: Update order status and manage orders
+const adminUpdateOrder = async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user.type !== 'Admin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied. Admin privileges required.'
+      });
+    }
+
+    const { orderId } = req.params;
+    const { orderStatus, trackingNumber, deliveryDate, notes } = req.body;
+
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        orderStatus,
+        trackingNumber,
+        deliveryDate,
+        notes,
+        ...(orderStatus === 'Delivered' && { paymentStatus: 'Paid' })
+      },
+      { new: true }
+    ).populate('userId', 'fullname email mobile');
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        error: 'Order not found'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'Order updated successfully',
+      order
+    });
+
+  } catch (error) {
+    console.error('Admin update order error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to update order',
+      details: error.message
+    });
+  }
+};
+
 module.exports = {
   createOrder,
   getUserOrders,
   getOrder,
   updateOrderStatus,
   cancelOrder,
-  getAllOrders
+  getAllOrders,
+  adminUpdateOrder
 };

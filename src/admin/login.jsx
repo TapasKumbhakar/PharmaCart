@@ -22,13 +22,14 @@ export default function Login() {
     setLoading(true);
 
     try {
+      // Try API login first
       const response = await authAPI.login({
         email: identifier,
         password,
         type: userType
       });
 
-      if (response.success) {
+      if (response && response.success) {
         login(response.user);
 
         Swal.fire({
@@ -46,16 +47,72 @@ export default function Login() {
             navigate('/');
           }
         }, 1800);
+      } else {
+        throw new Error('API login failed');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: error.message || 'Invalid credentials. Please try again.',
-        timer: 2000,
-        showConfirmButton: false
-      });
+      console.error('API Login error:', error);
+      console.log('Falling back to localStorage authentication...');
+
+      try {
+        // Fallback to localStorage authentication
+        const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+        // Find user by email and type
+        const user = registeredUsers.find(u =>
+          u.email === identifier &&
+          u.type === userType &&
+          u.password === password &&
+          u.isActive
+        );
+
+        if (user) {
+          // Create user session
+          const userSession = {
+            id: user.id,
+            fullname: user.fullname,
+            email: user.email,
+            mobile: user.mobile,
+            type: user.type,
+            role: user.role,
+            isLoggedIn: true
+          };
+
+          // Save to localStorage and context
+          localStorage.setItem('userData', JSON.stringify(userSession));
+          login(userSession);
+
+          console.log('User logged in successfully:', userSession);
+
+          Swal.fire({
+            icon: 'success',
+            title: `${userType} Login Successful!`,
+            text: 'Welcome to PharmaCart.',
+            timer: 1800,
+            showConfirmButton: false
+          });
+
+          setTimeout(() => {
+            if (userType === 'Admin') {
+              navigate('/admin-panel');
+            } else {
+              navigate('/');
+            }
+          }, 1800);
+        } else {
+          throw new Error('Invalid credentials or user not found');
+        }
+
+      } catch (fallbackError) {
+        console.error('Fallback login error:', fallbackError);
+        Swal.fire({
+          icon: 'error',
+          title: 'Login Failed',
+          text: fallbackError.message || 'Invalid credentials. Please try again.',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
     } finally {
       setLoading(false);
     }

@@ -1,14 +1,179 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Navbar.css';
 import pharmalogo from '../assets/logo/pharmalogo.png';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar(props) {
-  const { cartCount = 0 } = props; // get cartCount from props
+  const {
+    cartCount = 0,
+    search = '',
+    setSearch = () => {},
+    searchResult = null,
+    setSearchResult = () => {},
+    handleSearch = () => {},
+    products = []
+  } = props;
+
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const location = useLocation();
+  const { isLoggedIn, userType } = useAuth();
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
+  const searchRef = useRef(null);
+
+  // Clear search when navigating to different pages (except search results)
+  useEffect(() => {
+    if (!location.pathname.includes('/search-results') && setSearch) {
+      setSearch('');
+      setShowSearchResults(false);
+      setSearchSuggestions([]);
+    }
+  }, [location.pathname, setSearch]);
+
+  // Hide search results when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Generate search suggestions
+  const generateSuggestions = (searchTerm) => {
+    if (!searchTerm.trim()) {
+      setSearchSuggestions([]);
+      return;
+    }
+
+    const suggestions = products.filter(product =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ).slice(0, 5); // Limit to 5 suggestions
+
+    setSearchSuggestions(suggestions);
+  };
+
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    if (setSearch) setSearch(value);
+    generateSuggestions(value);
+    setShowSearchResults(true);
+
+    if (!value.trim()) {
+      if (setSearchResult) setSearchResult(null);
+      setShowSearchResults(false);
+      setSearchSuggestions([]);
+    }
+  };
+
+  // Clear search function
+  const clearSearch = () => {
+    if (setSearch) setSearch('');
+    if (setSearchResult) setSearchResult(null);
+    setShowSearchResults(false);
+    setSearchSuggestions([]);
+  };
+
+  // Handle search form submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (!search.trim()) return;
+
+    const searchTerm = search.trim();
+    const found = products.find(
+      (item) => item.name.toLowerCase() === searchTerm.toLowerCase()
+    );
+
+    if (found) {
+      if (setSearchResult) setSearchResult(found);
+      navigate(`/search-results?q=${encodeURIComponent(searchTerm)}`);
+    } else {
+      if (setSearchResult) setSearchResult('notfound');
+      navigate(`/search-results?q=${encodeURIComponent(searchTerm)}`);
+    }
+
+    // Clear search input and hide results
+    if (setSearch) setSearch('');
+    setShowSearchResults(false);
+    setSearchSuggestions([]);
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (product) => {
+    if (setSearchResult) setSearchResult(product);
+    setShowSearchResults(false);
+    setSearchSuggestions([]);
+    navigate(`/search-results?q=${encodeURIComponent(product.name)}`);
+
+    // Clear search input after navigation
+    setTimeout(() => {
+      if (setSearch) setSearch('');
+    }, 100);
+  };
+
+  // Don't show search for admin users
+  if (userType === 'Admin') {
+    return (
+      <nav className="navbar">
+        <Link to="/">
+          <img
+            className="navbar-logo"
+            src={pharmalogo}
+            alt="PharmaCart Logo"
+            style={{ cursor: 'pointer' }}
+          />
+        </Link>
+
+        <div className="navbar-center">
+          <div className="admin-nav-links">
+            <Link to="/admin-panel" className="admin-nav-link">
+              <span className="nav-icon">📊</span>
+              Dashboard
+            </Link>
+            <Link to="/admin-messages" className="admin-nav-link">
+              <span className="nav-icon">💬</span>
+              Messages
+            </Link>
+          </div>
+        </div>
+
+        <div className="navbar-right">
+          <div style={{ marginLeft: '20px' }}>
+            {isLoggedIn ? (
+              <UserDropdown />
+            ) : (
+              <button
+                className="navbar-login-btn"
+                onClick={() => navigate('/login')}
+                style={{
+                  background: 'rgb(99, 102, 241)',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '8px 24px',
+                  fontWeight: 600,
+                  fontSize: '1rem',
+                  boxShadow: '0 2px 8px rgba(99,102,241,0.09)',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s',
+                }}
+              >
+                Login
+              </button>
+            )}
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="navbar">
@@ -21,6 +186,77 @@ export default function Navbar(props) {
           style={{ cursor: 'pointer' }}
         />
       </Link>
+
+      {/* Search Bar - Only for customers */}
+      <div className="navbar-search" ref={searchRef}>
+        <form onSubmit={handleSearchSubmit} className="search-form">
+          <div className="search-input-container">
+            <input
+              type="text"
+              placeholder="Search medicines..."
+              value={search}
+              onChange={handleSearchChange}
+              className="search-input"
+              onFocus={() => setShowSearchResults(true)}
+            />
+            {search && (
+              <button
+                type="button"
+                className="clear-search-button"
+                onClick={clearSearch}
+                title="Clear search"
+              >
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            )}
+            <button type="submit" className="search-button">
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* Search Results Dropdown */}
+          {showSearchResults && (searchSuggestions.length > 0 || search.trim()) && (
+            <div className="search-results-dropdown">
+              {searchSuggestions.length > 0 ? (
+                <>
+                  <div className="search-results-header">
+                    <span>Suggestions</span>
+                  </div>
+                  {searchSuggestions.map((product) => (
+                    <div
+                      key={product.id}
+                      className="search-result-item"
+                      onClick={() => handleSuggestionClick(product)}
+                    >
+                      <img src={product.img} alt={product.name} className="search-result-image" />
+                      <div className="search-result-info">
+                        <span className="search-result-name">{product.name}</span>
+                        <span className="search-result-price">{product.price}</span>
+                      </div>
+                    </div>
+                  ))}
+                  {search.trim() && !searchSuggestions.some(p => p.name.toLowerCase() === search.toLowerCase()) && (
+                    <div className="search-no-exact-match">
+                      <span>Press Enter to search for "{search}"</span>
+                    </div>
+                  )}
+                </>
+              ) : search.trim() ? (
+                <div className="search-no-results">
+                  <span>No medicines found for "{search}"</span>
+                  <small>Press Enter to see detailed results</small>
+                </div>
+              ) : null}
+            </div>
+          )}
+        </form>
+      </div>
 
       <div className="navbar-right">
         <ul className="navbar-links">
@@ -125,7 +361,7 @@ export default function Navbar(props) {
               className="navbar-login-btn"
               onClick={() => navigate('/login')}
               style={{
-                background: 'rgb(99, 102, 241)',
+                background: 'rgba(11, 113, 18, 1)',
                 color: '#fff',
                 border: 'none',
                 borderRadius: '8px',

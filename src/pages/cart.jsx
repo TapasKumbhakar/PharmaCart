@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { stripePromise } from '../stripe';
-import { orderAPI, getCurrentUserId } from '../services/api';
+import { orderAPI } from '../services/api';
+import AddressSelector from '../components/AddressSelector';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import './cart.css';
@@ -9,8 +10,61 @@ import './cart.css';
 export default function Cart({ cartItems = [], removeFromCart, increaseQuantity, decreaseQuantity, clearCart }) {
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
-  const [address, setAddress] = React.useState('No address found');
+  const [selectedAddress, setSelectedAddress] = React.useState(null);
   const [payment, setPayment] = React.useState('');
+
+  // Handle Stripe Payment (Mock implementation for demo)
+  const handleStripePayment = async () => {
+    try {
+      // Show Stripe-like loading message
+      Swal.fire({
+        title: 'Redirecting to Stripe...',
+        text: 'Please wait while we redirect you to Stripe Checkout.',
+        icon: 'info',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Simulate Stripe checkout session creation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+
+      // Create mock Stripe checkout data
+      const checkoutData = {
+        sessionId: 'cs_test_' + Math.random().toString(36).substr(2, 9),
+        items: cartItems.map(item => ({
+          name: item.name,
+          price: typeof item.price === 'string' ?
+            parseFloat(item.price.replace(/[₹\s]/g, '')) :
+            parseFloat(item.price) || 0,
+          quantity: item.quantity || 1
+        })),
+        total: total,
+        shippingFee: shippingFee || 0
+      };
+
+      // Store checkout data for the mock Stripe page
+      localStorage.setItem('stripeCheckoutData', JSON.stringify(checkoutData));
+
+      // Close loading and redirect to mock Stripe checkout
+      Swal.close();
+
+      // Redirect to mock Stripe checkout page
+      window.location.href = '/stripe-checkout';
+
+    } catch (error) {
+      console.error('Payment error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Payment Failed',
+        text: 'Unable to process payment. Please try again.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+    }
+  };
 
   const price = cartItems.reduce((sum, item) => {
     let itemPrice = 0;
@@ -45,6 +99,17 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
       return;
     }
 
+    if (!selectedAddress) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Select Delivery Address',
+        text: 'Please select a delivery address to continue.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
     try {
       // Prepare order data
       const orderData = {
@@ -61,11 +126,14 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
         shippingFee: shippingFee,
         paymentMethod: payment,
         shippingAddress: {
-          street: address,
-          city: 'Default City',
-          state: 'Default State',
-          zipCode: '000000',
-          country: 'India'
+          fullName: selectedAddress.fullName,
+          phone: selectedAddress.phone,
+          street: selectedAddress.street,
+          city: selectedAddress.city,
+          state: selectedAddress.state,
+          zipCode: selectedAddress.zipCode,
+          country: selectedAddress.country,
+          type: selectedAddress.type
         }
       };
 
@@ -76,7 +144,7 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
         if (response.success) {
           Swal.fire({
             title: 'Order Placed!',
-            text: `Your order #${response.order.orderNumber} has been placed successfully.`,
+            text: `Your order #${response.order.orderNumber} has been placed successfully. Redirecting to home page...`,
             icon: 'success',
             timer: 2000,
             showConfirmButton: false
@@ -84,18 +152,9 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
 
           setTimeout(() => {
             clearCart && clearCart();
-            navigate('/orders');
+            navigate('/');
           }, 2000);
         }
-      } else if (payment === 'Online Payment') {
-        Swal.fire({
-          title: 'Redirecting to payment gateway...',
-          text: 'Please wait while we process your payment.',
-          icon: 'info',
-          timer: 2000,
-          showConfirmButton: false
-        });
-        // Note: Online payment will be handled by the existing Stripe integration
       }
     } catch (error) {
       console.error('Order placement error:', error);
@@ -159,16 +218,16 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
               </li>
             ))}
           </ul>
+          {/* Address Selection */}
+          <AddressSelector
+            onAddressSelect={setSelectedAddress}
+            selectedAddressId={selectedAddress?.id}
+            showAddForm={true}
+          />
+
           <div className="order-summary-box">
             <h3>Order Summary</h3>
             <hr />
-            <div className="order-summary-section">
-              <div className="order-summary-label">DELIVERY ADDRESS</div>
-              <div className="order-summary-row">
-                <span className="order-summary-address">{address}</span>
-                <button className="order-summary-change" onClick={() => setAddress('Address updated!')}>Change</button>
-              </div>
-            </div>
             <div className="order-summary-section">
               <div className="order-summary-label">PAYMENT METHOD</div>
               <select className="order-summary-select" value={payment} onChange={e => setPayment(e.target.value)}>
@@ -223,6 +282,17 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
                   return;
                 }
 
+                if (!selectedAddress) {
+                  Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Delivery Address',
+                    text: 'Please select a delivery address to continue.',
+                    timer: 2000,
+                    showConfirmButton: false
+                  });
+                  return;
+                }
+
                 if (!payment) {
                   Swal.fire({
                     icon: 'warning',
@@ -234,35 +304,60 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
                   return;
                 }
 
-                const stripe = await stripePromise;
-                const response = await fetch('http://localhost:4242/create-checkout-session', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ cartItems, shippingFee })
-                });
+                // Create order first, then process Stripe payment
+                const orderData = {
+                  items: cartItems.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity || 1,
+                    price: typeof item.price === 'string' ?
+                      parseFloat(item.price.replace(/[₹\s]/g, '')) :
+                      parseFloat(item.price) || 0
+                  })),
+                  totalAmount: total,
+                  shippingAddress: {
+                    fullName: selectedAddress.fullName,
+                    phone: selectedAddress.phone,
+                    street: selectedAddress.street,
+                    city: selectedAddress.city,
+                    state: selectedAddress.state,
+                    zipCode: selectedAddress.zipCode,
+                    country: selectedAddress.country,
+                    type: selectedAddress.type
+                  },
+                  paymentMethod: 'Online Payment',
+                  paymentStatus: 'Pending'
+                };
 
-                const session = await response.json();
+                try {
+                  const orderResponse = await orderAPI.createOrder(orderData);
 
-                if (session.id) {
+                  if (orderResponse.success) {
+                    // Store order ID for payment success page
+                    localStorage.setItem('pendingOrderId', orderResponse.order._id);
+                    localStorage.setItem('pendingOrderNumber', orderResponse.order.orderNumber);
 
-                  // ✅ Background: Clear cart after 4 seconds, with debug log
-                  setTimeout(() => {
-                    if (clearCart) {
-                      clearCart();
-                      console.log('clearCart called!');
-                      setTimeout(() => {
-                        console.log('Cart after clearCart:', localStorage.getItem('pharmacart_cart'));
-                      }, 100);
-                    }
-                  }, 4000);
+                    // Show processing message and redirect to Stripe
+                    Swal.fire({
+                      title: 'Redirecting to Payment...',
+                      text: 'Please wait while we redirect you to secure payment.',
+                      icon: 'info',
+                      timer: 2000,
+                      showConfirmButton: false
+                    });
 
-                  // 🚀 Redirect immediately
-                  await stripe.redirectToCheckout({ sessionId: session.id });
-                } else {
+                    // Process Stripe payment
+                    setTimeout(() => {
+                      handleStripePayment();
+                    }, 2000);
+                  } else {
+                    throw new Error(orderResponse.error || 'Failed to create order');
+                  }
+                } catch (error) {
+                  console.error('Order creation error:', error);
                   Swal.fire({
                     icon: 'error',
-                    title: 'Payment Error',
-                    text: 'Could not initiate payment. Please try again.',
+                    title: 'Order Failed',
+                    text: 'Failed to create order. Please try again.',
                     timer: 2000,
                     showConfirmButton: false
                   });

@@ -17,6 +17,7 @@
     "mongoose": "^8.16.3",
     "multer": "^2.0.1",
     "node-fetch": "^2.7.0",
+    "nodemon": "^3.1.10",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-responsive-carousel": "^3.2.23",

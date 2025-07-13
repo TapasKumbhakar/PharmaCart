@@ -54,6 +54,7 @@ export default function Signup() {
     setLoading(true);
 
     try {
+      // Try API registration first
       const response = await authAPI.register({
         fullname: form.fullname,
         mobile: form.mobile,
@@ -62,7 +63,7 @@ export default function Signup() {
         type: userType
       });
 
-      if (response.success) {
+      if (response && response.success) {
         Swal.fire({
           icon: 'success',
           title: `${userType} signup successful!`,
@@ -71,16 +72,62 @@ export default function Signup() {
           showConfirmButton: false
         });
         setTimeout(() => navigate('/login'), 2000);
+      } else {
+        throw new Error('API registration failed');
       }
     } catch (error) {
-      console.error('Signup error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Signup Failed',
-        text: error.message || 'Registration failed. Please try again.',
-        timer: 2000,
-        showConfirmButton: false
-      });
+      console.error('API Signup error:', error);
+      console.log('Falling back to localStorage registration...');
+
+      try {
+        // Fallback to localStorage registration
+        const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+
+        // Check if user already exists
+        const userExists = existingUsers.some(user => user.email === form.email);
+        if (userExists) {
+          throw new Error('User with this email already exists');
+        }
+
+        // Create new user
+        const newUser = {
+          id: 'USER_' + Date.now(),
+          fullname: form.fullname,
+          mobile: form.mobile,
+          email: form.email,
+          password: form.password, // In production, this should be hashed
+          type: userType,
+          role: userType.toLowerCase(),
+          createdAt: new Date().toISOString(),
+          isActive: true
+        };
+
+        // Add to registered users
+        existingUsers.push(newUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(existingUsers));
+
+        console.log('User registered successfully in localStorage:', newUser);
+
+        Swal.fire({
+          icon: 'success',
+          title: `${userType} Registration Successful!`,
+          text: 'Your account has been created. Please log in with your credentials.',
+          timer: 3000,
+          showConfirmButton: false
+        });
+
+        setTimeout(() => navigate('/login'), 3000);
+
+      } catch (fallbackError) {
+        console.error('Fallback registration error:', fallbackError);
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed',
+          text: fallbackError.message || 'Registration failed. Please try again.',
+          timer: 3000,
+          showConfirmButton: false
+        });
+      }
     } finally {
       setLoading(false);
     }

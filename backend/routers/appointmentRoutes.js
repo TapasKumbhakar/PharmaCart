@@ -21,8 +21,8 @@ router.get('/:appointmentId', getAppointment);
 router.put('/:appointmentId/cancel', cancelAppointment);
 router.put('/:appointmentId/reschedule', rescheduleAppointment);
 
-// Admin routes (you can add admin middleware later)
-router.get('/', getAllAppointments);
-router.put('/:appointmentId/status', updateAppointmentStatus);
+// Admin routes
+router.get('/admin/all', getAllAppointments);
+router.put('/admin/:appointmentId/update', updateAppointmentStatus);
 
 module.exports = router;

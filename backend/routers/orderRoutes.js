@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { 
-  createOrder, 
-  getUserOrders, 
-  getOrder, 
-  updateOrderStatus, 
-  cancelOrder, 
-  getAllOrders 
+const {
+  createOrder,
+  getUserOrders,
+  getOrder,
+  updateOrderStatus,
+  cancelOrder,
+  getAllOrders,
+  adminUpdateOrder
 } = require('../controller/orderController');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -19,8 +20,9 @@ router.get('/my-orders', getUserOrders);
 router.get('/:orderId', getOrder);
 router.put('/:orderId/cancel', cancelOrder);
 
-// Admin routes (you can add admin middleware later)
-router.get('/', getAllOrders);
+// Admin routes
+router.get('/admin/all', getAllOrders);
+router.put('/admin/:orderId/update', adminUpdateOrder);
 router.put('/:orderId/status', updateOrderStatus);
 
 module.exports = router;

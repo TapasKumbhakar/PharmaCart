@@ -57,27 +57,122 @@ export default function CardContainer(props) {
   const navigate = useNavigate();
   const products = Array.isArray(props.product) && props.product.length > 0 ? props.product : defaultProducts;
 
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation();
+    if (props.addToCart) {
+      props.addToCart(product);
+    }
+  };
+
+  const handleBuyNow = (product, e) => {
+    e.stopPropagation();
+    if (props.addToCart) {
+      props.addToCart(product);
+    }
+    navigate('/cart');
+  };
+
   return (
-    <div className="card-container">
-      <div className="banner-section" style={{background: 'linear-gradient(90deg, #059669 60%, #34d399 100%)'}}>
-        <h1>Medicines</h1>
-        <p>Order genuine medicines and health essentials online, delivered to your door.</p>
-      </div>
-      {/* <h2>Medicine</h2> */}
-      <div className="card-list">
-        {products.map(product => (
-          <div className="card" key={product.id} onClick={() => navigate(`/id/${product.id}`)}>
-            <div className="img-box">
-              <img src={product.img} alt={product.name} style={{maxWidth: '100%', maxHeight: '100%', borderRadius: 8}} />
-            </div>
-            <div className='card-container-content'>
-              <h3>{product.name}</h3>
-              <p>{product.desc}</p>
-              <p style={{fontWeight: 600, color: '#4f46e5', margin: '8px 0'}}>{product.price}</p>
-              {/* <button className="add-to-cart-btn">Add to Cart</button> */}
+    <div className="medicine-page-container">
+      {/* Enhanced Banner Section */}
+      <div className="medicine-banner-section">
+        <div className="banner-content">
+          <div className="banner-text">
+            <h1>Premium Medicines</h1>
+            <p>Authentic medicines from trusted brands, delivered safely to your doorstep</p>
+            <div className="banner-features">
+              <div className="feature-item">
+                <span className="feature-icon">🚚</span>
+                <span>Fast Delivery</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-icon">✅</span>
+                <span>Genuine Products</span>
+              </div>
+              <div className="feature-item">
+                <span className="feature-icon">💊</span>
+                <span>Expert Verified</span>
+              </div>
             </div>
           </div>
-        ))}
+          <div className="banner-decoration">
+            <div className="floating-pill pill-1">💊</div>
+            <div className="floating-pill pill-2">🏥</div>
+            <div className="floating-pill pill-3">⚕️</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Products Section */}
+      <div className="medicine-content">
+        <div className="section-header">
+          <h2>Available Medicines</h2>
+          <p>Choose from our wide range of quality medicines</p>
+        </div>
+
+        <div className="medicine-grid">
+          {products.map(product => (
+            <div className="medicine-card" key={product.id} onClick={() => navigate(`/id/${product.id}`)}>
+              <div className="card-badge">
+                <span>Verified</span>
+              </div>
+
+              <div className="medicine-image-container">
+                <img src={product.img} alt={product.name} className="medicine-image" />
+                <div className="image-overlay">
+                  <span className="quick-view">Quick View</span>
+                </div>
+              </div>
+
+              <div className="medicine-info">
+                <h3 className="medicine-name">{product.name}</h3>
+                <p className="medicine-description">{product.desc}</p>
+
+                <div className="medicine-footer">
+                  <div className="price-section">
+                    <span className="current-price">{product.price}</span>
+                    <span className="original-price">MRP ₹{parseInt(product.price.replace(/[^\d]/g, '')) + 20}</span>
+                  </div>
+
+                  <div className="action-buttons">
+                    <button
+                      className="btn-add-cart"
+                      onClick={(e) => handleAddToCart(product, e)}
+                      title="Add to Cart"
+                    >
+                      <span className="btn-icon">🛒</span>
+                    </button>
+                    <button
+                      className="btn-buy-now"
+                      onClick={(e) => handleBuyNow(product, e)}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+
+                <div className="medicine-meta">
+                  <div className="rating">
+                    <span className="stars">⭐⭐⭐⭐⭐</span>
+                    <span className="rating-text">4.8 (120 reviews)</span>
+                  </div>
+                  <div className="availability">
+                    <span className="stock-indicator"></span>
+                    <span>In Stock</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {products.length === 0 && (
+          <div className="empty-state">
+            <div className="empty-icon">💊</div>
+            <h3>No medicines available</h3>
+            <p>Please check back later for our medicine catalog</p>
+          </div>
+        )}
       </div>
     </div>
   );

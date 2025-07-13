@@ -50,14 +50,28 @@ export default function UserDropdown() {
       </div>
       {open && (
         <div className="dropdown-menu">
-          <a href="/orders">My Orders</a>
-          <a href="/my-appointments">My Appointment</a>
-          <a href="/medical">Medical Records</a>
-          {/* <a href="/profile">My Profile</a> */}
-          {/* <a href="/wallet">Wallet</a> */}
-          {/* <a href="/refer">Refer & Earn</a> */}
-          {/* <a href="/notifications">Notifications</a> */}
-          <button onClick={logout}>Log Out</button>
+          {userType === 'Admin' ? (
+            // Admin-specific menu
+            <>
+              <a href="/admin-panel">Admin Dashboard</a>
+              <a href="/admin-panel">Manage Orders</a>
+              <a href="/admin-panel">Manage Appointments</a>
+              <a href="/admin-panel">Medical Records</a>
+              <div style={{ borderTop: '1px solid #eee', margin: '8px 0' }}></div>
+              <button onClick={handleLogout}>Log Out</button>
+            </>
+          ) : (
+            // Customer-specific menu
+            <>
+              <a href="/orders">My Orders</a>
+              <a href="/my-appointments">My Appointments</a>
+              <a href="/medical-records">Medical Records</a>
+              <a href="/upload">Upload Prescription</a>
+              <a href="/addresses">Manage Addresses</a>
+              <div style={{ borderTop: '1px solid #eee', margin: '8px 0' }}></div>
+              <button onClick={handleLogout}>Log Out</button>
+            </>
+          )}
         </div>
       )}
     </div>
