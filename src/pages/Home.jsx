@@ -202,7 +202,7 @@ export default function Home() {
             emulateTouch={true}
             className="main-carousel"
           >
-            <div className="carousel-slide">
+            {/* <div className="carousel-slide">
               <img
                 src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?auto=format&fit=crop&w=1200&q=80"
                 alt="Modern Pharmacy Interior"
@@ -211,7 +211,7 @@ export default function Home() {
                 <h3>Modern Pharmacy Experience</h3>
                 <p>State-of-the-art facilities ensuring quality and safety</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="carousel-slide">
               <img
