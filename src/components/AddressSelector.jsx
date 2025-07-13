@@ -25,24 +25,47 @@ export default function AddressSelector({ onAddressSelect, selectedAddressId, sh
   }, [user]);
 
   const loadAddresses = () => {
-    const savedAddresses = localStorage.getItem(`addresses_${user?.email || 'user'}`);
-    if (savedAddresses) {
-      const addressList = JSON.parse(savedAddresses);
-      setAddresses(addressList);
-      
-      // Auto-select default address if no address is selected
-      if (!selectedAddressId) {
-        const defaultAddress = addressList.find(addr => addr.isDefault);
-        if (defaultAddress && onAddressSelect) {
-          onAddressSelect(defaultAddress);
+    try {
+      const savedAddresses = localStorage.getItem(`addresses_${user?.email || 'user'}`);
+      if (savedAddresses) {
+        const addressList = JSON.parse(savedAddresses);
+        setAddresses(addressList);
+
+        // Auto-select default address if no address is selected
+        if (!selectedAddressId) {
+          const defaultAddress = addressList.find(addr => addr.isDefault);
+          if (defaultAddress && onAddressSelect) {
+            onAddressSelect(defaultAddress);
+          }
         }
       }
+    } catch (error) {
+      console.error('Error loading addresses:', error);
+      setAddresses([]);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Loading Addresses',
+        text: 'There was an issue loading your saved addresses.',
+        timer: 3000,
+        showConfirmButton: false
+      });
     }
   };
 
   const saveAddresses = (newAddresses) => {
-    localStorage.setItem(`addresses_${user?.email || 'user'}`, JSON.stringify(newAddresses));
-    setAddresses(newAddresses);
+    try {
+      localStorage.setItem(`addresses_${user?.email || 'user'}`, JSON.stringify(newAddresses));
+      setAddresses(newAddresses);
+    } catch (error) {
+      console.error('Error saving addresses:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error Saving Address',
+        text: 'There was an issue saving your address. Please try again.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+    }
   };
 
   const handleInputChange = (e) => {
@@ -56,12 +79,39 @@ export default function AddressSelector({ onAddressSelect, selectedAddressId, sh
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Basic validation
     if (!formData.fullName || !formData.phone || !formData.street || !formData.city || !formData.state || !formData.zipCode) {
       Swal.fire({
         icon: 'warning',
         title: 'Missing Information',
         text: 'Please fill in all required fields.',
         timer: 2000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    // Phone number validation (basic Indian format)
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Phone Number',
+        text: 'Please enter a valid 10-digit Indian mobile number.',
+        timer: 3000,
+        showConfirmButton: false
+      });
+      return;
+    }
+
+    // ZIP code validation (Indian postal code format)
+    const zipRegex = /^[1-9][0-9]{5}$/;
+    if (!zipRegex.test(formData.zipCode)) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid ZIP Code',
+        text: 'Please enter a valid 6-digit Indian postal code.',
+        timer: 3000,
         showConfirmButton: false
       });
       return;

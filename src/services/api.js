@@ -192,9 +192,41 @@ export const orderAPI = {
   },
 
   cancelOrder: async (orderId) => {
-    return await apiCall(`/orders/${orderId}/cancel`, {
-      method: 'PUT'
-    });
+    try {
+      // Mock API call - update in localStorage
+      const orders = JSON.parse(localStorage.getItem('user_orders') || '[]');
+
+      // Find and update the order
+      const orderIndex = orders.findIndex(order => order._id === orderId);
+
+      if (orderIndex !== -1) {
+        orders[orderIndex] = {
+          ...orders[orderIndex],
+          orderStatus: 'Cancelled',
+          updatedAt: new Date().toISOString()
+        };
+
+        // Save back to localStorage
+        localStorage.setItem('user_orders', JSON.stringify(orders));
+
+        return {
+          success: true,
+          order: orders[orderIndex],
+          message: 'Order cancelled successfully'
+        };
+      } else {
+        return {
+          success: false,
+          error: 'Order not found'
+        };
+      }
+    } catch (error) {
+      console.error('Cancel order error:', error);
+      return {
+        success: false,
+        error: 'Failed to cancel order'
+      };
+    }
   },
 
   updateOrderStatus: async (orderId, statusData) => {

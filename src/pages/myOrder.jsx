@@ -157,14 +157,32 @@ export default function MyOrders() {
       });
 
       if (result.isConfirmed) {
-        const response = await orderAPI.cancelOrder(orderId);
-        if (response.success) {
-          // Update the order in the local state
+        try {
+          // Update order in localStorage
+          let localOrders = [];
+          const userOrders = localStorage.getItem('user_orders');
+          if (userOrders) {
+            localOrders = JSON.parse(userOrders);
+          }
+
+          // Find and update the order
+          const updatedOrders = localOrders.map(order =>
+            order._id === orderId
+              ? { ...order, orderStatus: 'Cancelled', updatedAt: new Date().toISOString() }
+              : order
+          );
+
+          // Save back to localStorage
+          localStorage.setItem('user_orders', JSON.stringify(updatedOrders));
+
+          // Update the local state
           setOrders(orders.map(order =>
             order._id === orderId
-              ? { ...order, orderStatus: 'Cancelled' }
+              ? { ...order, orderStatus: 'Cancelled', updatedAt: new Date().toISOString() }
               : order
           ));
+
+          console.log('Order cancelled successfully:', orderId);
 
           Swal.fire({
             icon: 'success',
@@ -173,6 +191,10 @@ export default function MyOrders() {
             timer: 2000,
             showConfirmButton: false
           });
+
+        } catch (localError) {
+          console.error('Failed to cancel order in localStorage:', localError);
+          throw new Error('Failed to cancel order. Please try again.');
         }
       }
     } catch (error) {
@@ -195,6 +217,63 @@ export default function MyOrders() {
       timer: 2000,
       showConfirmButton: false
     });
+  };
+
+  const handleRemoveOrder = async (orderId) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Remove Order?',
+        text: 'Are you sure you want to remove this order from your list? This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc2626',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Yes, remove it!'
+      });
+
+      if (result.isConfirmed) {
+        try {
+          // Remove order from localStorage
+          let localOrders = [];
+          const userOrders = localStorage.getItem('user_orders');
+          if (userOrders) {
+            localOrders = JSON.parse(userOrders);
+          }
+
+          // Filter out the order to remove
+          const updatedOrders = localOrders.filter(order => order._id !== orderId);
+
+          // Save back to localStorage
+          localStorage.setItem('user_orders', JSON.stringify(updatedOrders));
+
+          // Update the local state
+          setOrders(orders.filter(order => order._id !== orderId));
+
+          console.log('Order removed successfully:', orderId);
+
+          Swal.fire({
+            icon: 'success',
+            title: 'Order Removed',
+            text: 'The order has been removed from your list.',
+            timer: 2000,
+            showConfirmButton: false
+          });
+
+        } catch (localError) {
+          console.error('Failed to remove order from localStorage:', localError);
+          throw new Error('Failed to remove order. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.error('Remove order error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Removal Failed',
+        text: error.message || 'Failed to remove order. Please try again.',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
   };
 
   const handleRemove = async (orderId) => {
@@ -437,10 +516,11 @@ export default function MyOrders() {
                       <span className="btn-icon">📍</span>
                       Track Order
                     </button>
-                    <button className="remove-btn" onClick={() => handleRemove(order._id)}>
+                    <button className="remove-btn" onClick={() => handleRemoveOrder(order._id)}>
                       <span className="btn-icon">🗑️</span>
                       Remove
                     </button>
+                 
                   </div>
 
                   {order.orderStatus === 'Delivered' && (
