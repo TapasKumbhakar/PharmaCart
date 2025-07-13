@@ -358,6 +358,41 @@
   color: white;
 }
 
+.qty-btn.disabled,
+.qty-btn:disabled {
+  background: #f3f4f6 !important;
+  color: #9ca3af !important;
+  border-color: #d1d5db !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+.qty-btn.disabled:hover,
+.qty-btn:disabled:hover {
+  background: #f3f4f6 !important;
+  color: #9ca3af !important;
+  transform: none !important;
+}
+
+.quantity-limit-message,
+.quantity-warning-message {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.quantity-limit-message {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+}
+
+.quantity-warning-message {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
 .quantity-display {
   font-size: 1.2rem;
   font-weight: 600;

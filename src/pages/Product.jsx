@@ -139,10 +139,31 @@ export default function Product(props) {
                   <>
                     <button className="qty-btn minus" onClick={() => props.decreaseQuantity && props.decreaseQuantity(get.id)}>-</button>
                     <span className="quantity-display">{cartItem.quantity}</span>
-                    <button className="qty-btn plus" onClick={() => props.increaseQuantity && props.increaseQuantity(get.id)}>+</button>
+                    <button
+                      className={`qty-btn plus ${cartItem.quantity >= 50 ? 'disabled' : ''}`}
+                      onClick={() => cartItem.quantity < 50 && props.increaseQuantity && props.increaseQuantity(get.id)}
+                      disabled={cartItem.quantity >= 50}
+                      title={cartItem.quantity >= 50 ? 'Maximum quantity reached (50)' : 'Increase quantity'}
+                    >
+                      +
+                    </button>
                   </>
                 )}
               </div>
+              {cartItem && cartItem.quantity >= 50 && (
+                <div className="quantity-limit-message">
+                  <span style={{ color: '#f59e0b', fontSize: '0.9rem', fontWeight: '500' }}>
+                    ⚠️ Maximum quantity limit reached (50 items)
+                  </span>
+                </div>
+              )}
+              {cartItem && cartItem.quantity >= 40 && cartItem.quantity < 50 && (
+                <div className="quantity-warning-message">
+                  <span style={{ color: '#6b7280', fontSize: '0.85rem' }}>
+                    📦 {50 - cartItem.quantity} items remaining
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="action-buttons">

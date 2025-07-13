@@ -56,7 +56,7 @@ export default function AdminPanel() {
         console.log('Loading admin data from localStorage...');
 
         // Load orders from localStorage (from cart purchases)
-        const storedOrders = localStorage.getItem('userOrders');
+        const storedOrders = localStorage.getItem('user_orders');
         const allOrders = storedOrders ? JSON.parse(storedOrders) : [];
 
         // Load appointments from localStorage
@@ -159,7 +159,7 @@ export default function AdminPanel() {
       setOrders(updatedOrders);
 
       // Update in localStorage
-      localStorage.setItem('userOrders', JSON.stringify(updatedOrders));
+      localStorage.setItem('user_orders', JSON.stringify(updatedOrders));
 
       Swal.fire({
         icon: 'success',

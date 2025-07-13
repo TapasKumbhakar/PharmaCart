@@ -34,18 +34,51 @@ export default function MyOrders() {
 
       try {
         const response = await orderAPI.getUserOrders();
-        if (response.success) {
+        if (response && response.success) {
+          console.log('Loaded orders from API:', response.orders.length);
           setOrders(response.orders);
+        } else {
+          throw new Error('API response failed');
         }
       } catch (error) {
-        console.error('Failed to fetch orders:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Failed to load orders',
-          text: error.message || 'Could not load your orders. Please try again.',
-          timer: 2000,
-          showConfirmButton: false
-        });
+        console.error('API failed, loading from localStorage:', error);
+
+        // Fallback to localStorage - check both possible keys
+        let localOrders = [];
+
+        // Try the main orders key first
+        const userOrders = localStorage.getItem('user_orders');
+        if (userOrders) {
+          try {
+            localOrders = JSON.parse(userOrders);
+            console.log('Loaded orders from user_orders:', localOrders.length);
+          } catch (parseError) {
+            console.error('Error parsing user_orders:', parseError);
+          }
+        }
+
+        // If no orders found, try the alternative key
+        if (localOrders.length === 0) {
+          const userOrdersAlt = localStorage.getItem('userOrders');
+          if (userOrdersAlt) {
+            try {
+              localOrders = JSON.parse(userOrdersAlt);
+              console.log('Loaded orders from userOrders:', localOrders.length);
+            } catch (parseError) {
+              console.error('Error parsing userOrders:', parseError);
+            }
+          }
+        }
+
+        // Sort orders by creation date (newest first)
+        if (localOrders.length > 0) {
+          localOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          setOrders(localOrders);
+          console.log('Successfully loaded', localOrders.length, 'orders from localStorage');
+        } else {
+          console.log('No orders found in localStorage');
+          setOrders([]);
+        }
       } finally {
         setLoading(false);
       }
@@ -53,6 +86,63 @@ export default function MyOrders() {
 
     fetchOrders();
   }, [isLoggedIn]);
+
+  // Manual refresh function
+  const handleRefresh = async () => {
+    setLoading(true);
+
+    // Force reload from localStorage
+    let localOrders = [];
+
+    // Try the main orders key first
+    const userOrders = localStorage.getItem('user_orders');
+    if (userOrders) {
+      try {
+        localOrders = JSON.parse(userOrders);
+        console.log('Refreshed orders from user_orders:', localOrders.length);
+      } catch (parseError) {
+        console.error('Error parsing user_orders:', parseError);
+      }
+    }
+
+    // If no orders found, try the alternative key
+    if (localOrders.length === 0) {
+      const userOrdersAlt = localStorage.getItem('userOrders');
+      if (userOrdersAlt) {
+        try {
+          localOrders = JSON.parse(userOrdersAlt);
+          console.log('Refreshed orders from userOrders:', localOrders.length);
+        } catch (parseError) {
+          console.error('Error parsing userOrders:', parseError);
+        }
+      }
+    }
+
+    // Sort orders by creation date (newest first)
+    if (localOrders.length > 0) {
+      localOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setOrders(localOrders);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Orders Refreshed!',
+        text: `Found ${localOrders.length} orders`,
+        timer: 1500,
+        showConfirmButton: false
+      });
+    } else {
+      setOrders([]);
+      Swal.fire({
+        icon: 'info',
+        title: 'No Orders Found',
+        text: 'You haven\'t placed any orders yet.',
+        timer: 1500,
+        showConfirmButton: false
+      });
+    }
+
+    setLoading(false);
+  };
 
   const handleCancel = async (orderId) => {
     try {
@@ -225,8 +315,21 @@ export default function MyOrders() {
     <div className="orders-page">
       <div className="orders-container">
         <div className="page-header">
-          <h1>My Orders</h1>
-          <p>Track and manage your medicine orders</p>
+          <div className="header-content">
+            <div className="header-text">
+              <h1>My Orders</h1>
+              <p>Track and manage your medicine orders</p>
+            </div>
+            <button
+              className="refresh-btn"
+              onClick={handleRefresh}
+              disabled={loading}
+              title="Refresh orders"
+            >
+              <span className="refresh-icon">🔄</span>
+              Refresh
+            </button>
+          </div>
           <div className="orders-stats">
             <div className="stat-item">
               <span className="stat-number">{orders.length}</span>

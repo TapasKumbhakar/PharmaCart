@@ -212,7 +212,21 @@ export default function Cart({ cartItems = [], removeFromCart, increaseQuantity,
                 <div className="cart-list-qty-controls">
                   <button className="product-qty-btn" onClick={() => decreaseQuantity && decreaseQuantity(item.id)}>-</button>
                   <span className="product-qty-value">{item.quantity}</span>
-                  <button className="product-qty-btn plus" onClick={() => increaseQuantity && increaseQuantity(item.id)}>+</button>
+                  <button
+                    className={`product-qty-btn plus ${item.quantity >= 50 ? 'disabled' : ''}`}
+                    onClick={() => item.quantity < 50 && increaseQuantity && increaseQuantity(item.id)}
+                    disabled={item.quantity >= 50}
+                    title={item.quantity >= 50 ? 'Maximum quantity reached (50)' : 'Increase quantity'}
+                  >
+                    +
+                  </button>
+                  {item.quantity >= 50 && (
+                    <div className="quantity-limit-indicator">
+                      <span style={{ color: '#f59e0b', fontSize: '0.8rem', marginLeft: '8px' }}>
+                        Max limit
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <button className="cart-list-remove" onClick={() => removeFromCart && removeFromCart(item.id)}>Remove</button>
               </li>

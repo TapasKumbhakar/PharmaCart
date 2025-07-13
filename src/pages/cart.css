@@ -143,3 +143,69 @@
 .order-summary-place:hover {
   background: #4338ca;
 }
+
+/* Quantity Button Styles */
+.product-qty-btn {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.product-qty-btn:hover {
+  background: #e5e7eb;
+}
+
+.product-qty-btn.plus {
+  background: linear-gradient(90deg,#6366f1 60%,#0fe3ab 100%);
+  color: #fff;
+  border: none;
+}
+
+.product-qty-btn.plus:hover {
+  background: linear-gradient(90deg,#5856eb 60%,#0dd9a0 100%);
+}
+
+.product-qty-btn.disabled,
+.product-qty-btn:disabled {
+  background: #e5e7eb !important;
+  color: #9ca3af !important;
+  cursor: not-allowed !important;
+  opacity: 0.6;
+  border: 1px solid #d1d5db !important;
+}
+
+.product-qty-btn.disabled:hover,
+.product-qty-btn:disabled:hover {
+  background: #e5e7eb !important;
+}
+
+.product-qty-value {
+  margin: 0 8px;
+  font-weight: 600;
+  color: #374151;
+  min-width: 24px;
+  text-align: center;
+}
+
+.quantity-limit-indicator {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+
+.cart-list-qty-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}

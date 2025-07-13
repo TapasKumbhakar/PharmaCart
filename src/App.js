@@ -138,13 +138,15 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Add to cart handler (increase quantity if exists)
+  // Add to cart handler (increase quantity if exists, max 50 per item)
   const addToCart = (product) => {
     setCartItems((prev) => {
       const found = prev.find((item) => item.id === product.id);
       if (found) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id && item.quantity < 50
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       }
       return [...prev, { ...product, quantity: 1 }];
@@ -156,11 +158,13 @@ function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Increase quantity
+  // Increase quantity (max 50 per item)
   const increaseQuantity = (id) => {
     setCartItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+        item.id === id && item.quantity < 50
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
       )
     );
   };
